@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/contexts/CartContext";
 import { Menu, X, ShoppingBag, User } from "lucide-react";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { itemCount } = useCart();
 
   const navigation = [
     { name: "Home", href: "/" },
@@ -47,14 +50,23 @@ const Header = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
+            <Button variant="ghost" size="icon" asChild>
+              <Link to="/profile">
+                <User className="h-5 w-5" />
+              </Link>
             </Button>
-            <Button variant="ghost" size="icon">
-              <ShoppingBag className="h-5 w-5" />
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingBag className="h-5 w-5" />
+                {itemCount > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-primary text-primary-foreground">
+                    {itemCount}
+                  </Badge>
+                )}
+              </Link>
             </Button>
-            <Button variant="hero" size="sm">
-              Shop Now
+            <Button variant="hero" size="sm" asChild>
+              <Link to="/products">Shop Now</Link>
             </Button>
           </div>
 
@@ -87,14 +99,23 @@ const Header = () => {
                 </Link>
               ))}
               <div className="flex items-center space-x-4 pt-4">
-                <Button variant="ghost" size="icon">
-                  <User className="h-5 w-5" />
+                <Button variant="ghost" size="icon" asChild>
+                  <Link to="/profile">
+                    <User className="h-5 w-5" />
+                  </Link>
                 </Button>
-                <Button variant="ghost" size="icon">
-                  <ShoppingBag className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="relative" asChild>
+                  <Link to="/cart">
+                    <ShoppingBag className="h-5 w-5" />
+                    {itemCount > 0 && (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-primary text-primary-foreground">
+                        {itemCount}
+                      </Badge>
+                    )}
+                  </Link>
                 </Button>
-                <Button variant="hero" size="sm" className="flex-1">
-                  Shop Now
+                <Button variant="hero" size="sm" className="flex-1" asChild>
+                  <Link to="/products">Shop Now</Link>
                 </Button>
               </div>
             </nav>

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 import { ShoppingBag } from "lucide-react";
 
 interface ProductCardProps {
@@ -26,7 +28,27 @@ const ProductCard = ({
   category 
 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { addItem } = useCart();
+  const { toast } = useToast();
   const discount = Math.round(((mrp - sellingPrice) / mrp) * 100);
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    addItem({
+      id,
+      slug,
+      title,
+      price: sellingPrice,
+      image: mainImage
+    });
+    
+    toast({
+      title: "Added to Cart!",
+      description: `${title} added to your cart.`,
+    });
+  };
 
   return (
     <Card 
@@ -58,7 +80,7 @@ const ProductCard = ({
           
           {/* Hover overlay with quick actions */}
           <div className={`absolute inset-0 bg-sage-dark/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-            <Button variant="hero" size="sm" className="animate-scale-in">
+            <Button variant="hero" size="sm" className="animate-scale-in" onClick={handleQuickAdd}>
               <ShoppingBag className="h-4 w-4 mr-2" />
               Quick Add
             </Button>

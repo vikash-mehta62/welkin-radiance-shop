@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +14,8 @@ const Product = () => {
   const { slug } = useParams();
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { addItem } = useCart();
+  const { toast } = useToast();
 
   // Mock product data (in real app, fetch based on slug)
   const product = {
@@ -89,6 +93,23 @@ For best results, use consistently as part of your morning skincare routine. Sto
     } else if (action === 'decrease' && quantity > 1) {
       setQuantity(prev => prev - 1);
     }
+  };
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addItem({
+        id: product.id,
+        slug: product.slug,
+        title: product.title,
+        price: product.sellingPrice,
+        image: product.images[0]
+      });
+    }
+    
+    toast({
+      title: "Added to Cart!",
+      description: `${quantity} × ${product.title} added to your cart.`,
+    });
   };
 
   return (
@@ -181,7 +202,7 @@ For best results, use consistently as part of your morning skincare routine. Sto
               </div>
 
               <div className="flex gap-4">
-                <Button variant="hero" size="lg" className="flex-1">
+                <Button variant="hero" size="lg" className="flex-1" onClick={handleAddToCart}>
                   <ShoppingBag className="h-5 w-5 mr-2" />
                   Add to Cart
                 </Button>
