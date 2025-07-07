@@ -15,6 +15,7 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const { addItem } = useCart();
+  const { products } = useAdmin();
   const { toast } = useToast();
 
   // Mock product data (in real app, fetch based on slug)
