@@ -6,12 +6,10 @@ import { AdminProvider } from "@/contexts/AdminContext";
 const AdminLayout = () => {
   return (
     <AdminProvider>
-      <div className="min-h-screen bg-muted/30 flex">
+      <div className="min-h-screen bg-sage-light/5 flex">
         <AdminSidebar />
         <main className="flex-1 overflow-auto">
-          <div className="p-6">
-            <Outlet />
-          </div>
+          <Outlet />
         </main>
       </div>
     </AdminProvider>
