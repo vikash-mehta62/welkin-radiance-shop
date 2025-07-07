@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ const mockProducts = [
 const Product = () => {
   const { slug } = useParams<{ slug: string }>();
   const product = mockProducts.find((p) => p.slug === slug);
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
 
   if (!product) {
@@ -63,7 +64,13 @@ const Product = () => {
   }
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    addItem({
+      id: product.id,
+      slug: product.slug,
+      title: product.name,
+      price: product.price,
+      image: product.imageUrl,
+    });
   };
 
   const incrementQuantity = () => {
