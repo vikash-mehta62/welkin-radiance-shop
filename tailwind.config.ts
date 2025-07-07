@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -75,7 +76,8 @@ export default {
 			backgroundImage: {
 				'gradient-hero': 'var(--gradient-hero)',
 				'gradient-card': 'var(--gradient-card)',
-				'gradient-button': 'var(--gradient-button)'
+				'gradient-button': 'var(--gradient-button)',
+				'gradient-primary': 'var(--gradient-primary)'
 			},
 			boxShadow: {
 				'soft': 'var(--shadow-soft)',

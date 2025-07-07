@@ -1,14 +1,17 @@
+
 import { Outlet } from "react-router-dom";
-import AdminHeader from "@/components/AdminHeader";
+import AdminSidebar from "@/components/AdminSidebar";
 import { AdminProvider } from "@/contexts/AdminContext";
 
 const AdminLayout = () => {
   return (
     <AdminProvider>
-      <div className="min-h-screen bg-background">
-        <AdminHeader />
-        <main className="container mx-auto px-4 py-8">
-          <Outlet />
+      <div className="min-h-screen bg-muted/30 flex">
+        <AdminSidebar />
+        <main className="flex-1 overflow-auto">
+          <div className="p-6">
+            <Outlet />
+          </div>
         </main>
       </div>
     </AdminProvider>
