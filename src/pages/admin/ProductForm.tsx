@@ -11,7 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAdmin, ProductFormData } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Plus, X } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const ProductForm = () => {
   const navigate = useNavigate();
@@ -39,6 +40,23 @@ const ProductForm = () => {
 
   const productTypes = ['Serum', 'Cleanser', 'Moisturizer', 'Toner', 'Sunscreen', 'Face Mask', 'Eye Cream'];
   const categories = ['Anti-Aging', 'Acne Care', 'Dry Skin', 'Oily Skin', 'Sensitive Skin', 'Glow Boost', 'Hydrating'];
+
+  const quillModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['link'],
+      ['clean']
+    ],
+  };
+
+  const quillFormats = [
+    'header', 'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet', 'color', 'background', 'align', 'link'
+  ];
 
   useEffect(() => {
     if (isEdit && id) {
@@ -316,53 +334,70 @@ const ProductForm = () => {
           </CardContent>
         </Card>
 
-        {/* Product Details */}
+        {/* Product Details with Rich Text Editors */}
         <Card className="border-sage-light/50">
           <CardHeader>
             <CardTitle>Product Details</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div>
-              <Label htmlFor="keyBenefits">Key Benefits</Label>
-              <Textarea
-                id="keyBenefits"
-                value={formData.keyBenefits}
-                onChange={(e) => setFormData(prev => ({ ...prev, keyBenefits: e.target.value }))}
-                placeholder="• Benefit 1&#10;• Benefit 2&#10;• Benefit 3"
-                rows={4}
-              />
+              <Label htmlFor="keyBenefits" className="mb-2 block">Key Benefits</Label>
+              <div style={{ minHeight: '150px' }}>
+                <ReactQuill
+                  theme="snow"
+                  value={formData.keyBenefits}
+                  onChange={(value) => setFormData(prev => ({ ...prev, keyBenefits: value }))}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  placeholder="Enter key benefits of the product..."
+                  style={{ height: '120px', marginBottom: '40px' }}
+                />
+              </div>
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Detailed product description..."
-                rows={4}
-              />
+              <Label htmlFor="description" className="mb-2 block">Description</Label>
+              <div style={{ minHeight: '150px' }}>
+                <ReactQuill
+                  theme="snow"
+                  value={formData.description}
+                  onChange={(value) => setFormData(prev => ({ ...prev, description: value }))}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  placeholder="Enter detailed product description..."
+                  style={{ height: '120px', marginBottom: '40px' }}
+                />
+              </div>
             </div>
 
             <div>
-              <Label htmlFor="skinSuitability">Skin Suitability</Label>
-              <Input
-                id="skinSuitability"
-                value={formData.skinSuitability}
-                onChange={(e) => setFormData(prev => ({ ...prev, skinSuitability: e.target.value }))}
-                placeholder="e.g., All skin types, Dry skin, Oily skin"
-              />
+              <Label htmlFor="skinSuitability" className="mb-2 block">Skin Suitability</Label>
+              <div style={{ minHeight: '120px' }}>
+                <ReactQuill
+                  theme="snow"
+                  value={formData.skinSuitability}
+                  onChange={(value) => setFormData(prev => ({ ...prev, skinSuitability: value }))}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  placeholder="Enter skin suitability information..."
+                  style={{ height: '90px', marginBottom: '40px' }}
+                />
+              </div>
             </div>
 
             <div>
-              <Label htmlFor="howToUse">How to Use</Label>
-              <Textarea
-                id="howToUse"
-                value={formData.howToUse}
-                onChange={(e) => setFormData(prev => ({ ...prev, howToUse: e.target.value }))}
-                placeholder="Step-by-step usage instructions..."
-                rows={3}
-              />
+              <Label htmlFor="howToUse" className="mb-2 block">How to Use</Label>
+              <div style={{ minHeight: '150px' }}>
+                <ReactQuill
+                  theme="snow"
+                  value={formData.howToUse}
+                  onChange={(value) => setFormData(prev => ({ ...prev, howToUse: value }))}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  placeholder="Enter step-by-step usage instructions..."
+                  style={{ height: '120px', marginBottom: '40px' }}
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -395,7 +430,7 @@ const ProductForm = () => {
           </CardContent>
         </Card>
 
-        {/* Extra Info Blocks */}
+        {/* Extra Info Blocks with Rich Text Editor */}
         <Card className="border-sage-light/50">
           <CardHeader>
             <CardTitle>Additional Information Blocks</CardTitle>
@@ -421,12 +456,20 @@ const ProductForm = () => {
                     placeholder="Block title"
                   />
                 </div>
-                <Textarea
-                  value={block.content}
-                  onChange={(e) => updateExtraInfoBlock(index, 'content', e.target.value)}
-                  placeholder="Block content..."
-                  rows={3}
-                />
+                <div>
+                  <Label className="mb-2 block">Content</Label>
+                  <div style={{ minHeight: '150px' }}>
+                    <ReactQuill
+                      theme="snow"
+                      value={block.content}
+                      onChange={(value) => updateExtraInfoBlock(index, 'content', value)}
+                      modules={quillModules}
+                      formats={quillFormats}
+                      placeholder="Enter block content..."
+                      style={{ height: '120px', marginBottom: '40px' }}
+                    />
+                  </div>
+                </div>
               </div>
             ))}
             <Button type="button" variant="outline" onClick={addExtraInfoBlock}>

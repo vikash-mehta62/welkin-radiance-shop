@@ -1,90 +1,24 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProductCard from "@/components/ProductCard";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Filter, Grid, List } from "lucide-react";
-import productsGrid from "@/assets/products-grid.jpg";
 
 const Products = () => {
+  const { products } = useAdmin();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  // Mock products data
-  const products = [
-    {
-      id: "1",
-      slug: "brightening-vitamin-c-serum",
-      title: "Brightening Vitamin C Serum",
-      mrp: 1299,
-      sellingPrice: 999,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Serum",
-      type: "Treatment"
-    },
-    {
-      id: "2",
-      slug: "hydrating-hyaluronic-moisturizer", 
-      title: "Hydrating Hyaluronic Moisturizer",
-      mrp: 899,
-      sellingPrice: 699,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Moisturizer",
-      type: "Hydration"
-    },
-    {
-      id: "3",
-      slug: "gentle-foaming-cleanser",
-      title: "Gentle Foaming Cleanser",
-      mrp: 599,
-      sellingPrice: 449,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Cleanser",
-      type: "Cleansing"
-    },
-    {
-      id: "4",
-      slug: "niacinamide-pore-toner",
-      title: "Niacinamide Pore Toner",
-      mrp: 799,
-      sellingPrice: 649,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Toner",
-      type: "Treatment"
-    },
-    {
-      id: "5",
-      slug: "retinol-night-serum",
-      title: "Retinol Night Serum",
-      mrp: 1499,
-      sellingPrice: 1199,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Serum",
-      type: "Anti-Aging"
-    },
-    {
-      id: "6",
-      slug: "sunscreen-spf-50",
-      title: "Daily Protection Sunscreen SPF 50",
-      mrp: 699,
-      sellingPrice: 549,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Sunscreen",
-      type: "Protection"
-    }
-  ];
-
-  const categories = ['all', 'Serum', 'Moisturizer', 'Cleanser', 'Toner', 'Sunscreen'];
+  // Get unique categories from products
+  const allCategories = Array.from(new Set(products.flatMap(product => product.category)));
+  const categories = ['all', ...allCategories];
 
   const filteredProducts = products.filter(product => 
-    selectedCategory === 'all' || product.category === selectedCategory
+    selectedCategory === 'all' || product.category.includes(selectedCategory)
   );
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -99,6 +33,19 @@ const Products = () => {
         return 0;
     }
   });
+
+  // Convert admin products to ProductCard format
+  const productCards = sortedProducts.map(product => ({
+    id: product.id,
+    slug: product.slug,
+    title: product.title,
+    mrp: product.mrp,
+    sellingPrice: product.sellingPrice,
+    mainImage: product.images[0] || '/placeholder.svg',
+    hoverImage: product.images[1] || product.images[0] || '/placeholder.svg',
+    category: product.type,
+    type: product.category[0] || 'Skincare'
+  }));
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -185,7 +132,7 @@ const Products = () => {
             ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
             : 'grid-cols-1'
         }`}>
-          {sortedProducts.map((product, index) => (
+          {productCards.map((product, index) => (
             <div 
               key={product.id}
               className="animate-fade-in"
@@ -207,17 +154,26 @@ const Products = () => {
                 No products found
               </h3>
               <p className="text-muted-foreground mb-4">
-                Try adjusting your filters to see more products
+                {products.length === 0 
+                  ? "No products have been created yet. Create your first product in the admin panel."
+                  : "Try adjusting your filters to see more products"
+                }
               </p>
-              <Button variant="luxury" onClick={() => setSelectedCategory('all')}>
-                Clear Filters
-              </Button>
+              {products.length === 0 ? (
+                <Button variant="luxury" asChild>
+                  <a href="/admin/products/create">Create Product</a>
+                </Button>
+              ) : (
+                <Button variant="luxury" onClick={() => setSelectedCategory('all')}>
+                  Clear Filters
+                </Button>
+              )}
             </CardContent>
           </Card>
         )}
 
-        {/* Load More */}
-        {sortedProducts.length > 0 && (
+        {/* Load More - Only show if there are products */}
+        {sortedProducts.length > 0 && sortedProducts.length >= 12 && (
           <div className="text-center">
             <Button variant="minimal" size="lg" className="px-8 py-3">
               Load More Products
