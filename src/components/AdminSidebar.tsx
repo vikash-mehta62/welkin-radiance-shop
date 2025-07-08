@@ -60,8 +60,8 @@ const AdminSidebar = () => {
   };
 
   return (
-    <Sidebar className="border-r-2 border-sage-light/50">
-      <SidebarHeader className="border-b-2 border-sage-light/30 bg-gradient-to-r from-sage-light/20 to-sage-light/10">
+    <Sidebar className="border-r-2 border-sage-light/50 bg-white">
+      <SidebarHeader className="border-b-2 border-sage-light/30 bg-gradient-to-r from-sage-light/20 to-sage-light/10 bg-white">
         <div className="flex items-center justify-between p-2">
           {state === "expanded" && (
             <div className="flex items-center space-x-3">
@@ -80,7 +80,7 @@ const AdminSidebar = () => {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -112,7 +112,7 @@ const AdminSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t-2 border-sage-light/30 bg-sage-light/5">
+      <SidebarFooter className="border-t-2 border-sage-light/30 bg-sage-light/5 bg-white">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton className="hover:bg-sage-light/20">
