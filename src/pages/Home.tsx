@@ -1,54 +1,26 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
+import { useAdmin } from "@/contexts/AdminContext";
 import { Gift, Truck, Sparkles, Leaf } from "lucide-react";
 import heroImage from "@/assets/hero-skincare.jpg";
 import productsGrid from "@/assets/products-grid.jpg";
 
 const Home = () => {
-  // Mock featured products data
-  const featuredProducts = [
-    {
-      id: "1",
-      slug: "brightening-vitamin-c-serum",
-      title: "Brightening Vitamin C Serum",
-      mrp: 1299,
-      sellingPrice: 999,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Serum"
-    },
-    {
-      id: "2", 
-      slug: "hydrating-hyaluronic-moisturizer",
-      title: "Hydrating Hyaluronic Moisturizer",
-      mrp: 899,
-      sellingPrice: 699,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Moisturizer"
-    },
-    {
-      id: "3",
-      slug: "gentle-foaming-cleanser",
-      title: "Gentle Foaming Cleanser",
-      mrp: 599, 
-      sellingPrice: 449,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Cleanser"
-    },
-    {
-      id: "4",
-      slug: "niacinamide-pore-toner",
-      title: "Niacinamide Pore Toner",
-      mrp: 799,
-      sellingPrice: 649,
-      mainImage: productsGrid,
-      hoverImage: productsGrid,
-      category: "Toner"
-    }
-  ];
+  const { products } = useAdmin();
+  
+  // Get first 4 products from AdminContext
+  const featuredProducts = products.slice(0, 4).map(product => ({
+    id: product.id!,
+    slug: product.slug,
+    title: product.title,
+    mrp: product.mrp,
+    sellingPrice: product.sellingPrice,
+    mainImage: product.images[0] || productsGrid,
+    hoverImage: product.images[1] || product.images[0] || productsGrid,
+    category: product.type
+  }));
 
   return (
     <div className="min-h-screen">
@@ -129,23 +101,44 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {featuredProducts.map((product, index) => (
-              <div 
-                key={product.id} 
-                className="animate-fade-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <ProductCard {...product} />
+          {featuredProducts.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                {featuredProducts.map((product, index) => (
+                  <div 
+                    key={product.id} 
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <ProductCard {...product} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          <div className="text-center">
-            <Button variant="luxury" size="lg" className="px-8 py-3">
-              View All Products
-            </Button>
-          </div>
+              <div className="text-center">
+                <Button variant="luxury" size="lg" className="px-8 py-3" asChild>
+                  <a href="/products">View All Products</a>
+                </Button>
+              </div>
+            </>
+          ) : (
+            <Card className="text-center py-12 border-sage-light/50">
+              <CardContent>
+                <div className="mx-auto mb-4 w-16 h-16 bg-sage-light rounded-full flex items-center justify-center">
+                  <Sparkles className="h-8 w-8 text-sage-dark" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground mb-2">
+                  No products available
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Products will appear here once they are created in the admin panel.
+                </p>
+                <Button variant="luxury" asChild>
+                  <a href="/admin/products/create">Create Product</a>
+                </Button>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </section>
 
