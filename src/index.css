@@ -6,7 +6,7 @@
 
 /* Root Variables */
 :root {
-  /* Light mode colors */
+  /* Light mode colors - ALL in HSL format */
   --background: 252 252 252; /* Very light sage/off-white */
   --foreground: 24 24 27; /* Dark charcoal */
   
@@ -37,11 +37,27 @@
   
   --radius: 0.5rem;
   
-  /* Custom sage colors */
-  --sage-light: 239 246 233; /* Very light sage for backgrounds */
-  --sage: 179 201 156; /* Medium sage */
-  --sage-dark: 113 142 91; /* Dark sage for accents */
-  --sage-darker: 82 105 66; /* Darker sage for hover states */
+  /* Custom sage colors - ALL in HSL format */
+  --sage-light: 92 39% 94%; /* Very light sage for backgrounds */
+  --sage: 83 22% 70%; /* Medium sage */
+  --sage-dark: 83 22% 46%; /* Dark sage for accents */
+  --sage-darker: 83 23% 33%; /* Darker sage for hover states */
+  
+  /* Additional brand colors */
+  --cream: 48 100% 96%;
+  --gold: 43 96% 56%;
+  --rose: 350 100% 88%;
+  
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, hsl(83 22% 70% / 0.1) 0%, hsl(83 22% 46% / 0.05) 100%);
+  --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(83 22% 70% / 0.02) 100%);
+  --gradient-button: linear-gradient(135deg, hsl(83 22% 46%) 0%, hsl(83 23% 33%) 100%);
+  --gradient-primary: linear-gradient(135deg, hsl(83 22% 46%) 0%, hsl(83 23% 33%) 100%);
+  
+  /* Shadows */
+  --shadow-soft: 0 2px 8px hsl(83 22% 46% / 0.06);
+  --shadow-card: 0 4px 16px hsl(83 22% 46% / 0.08);
+  --shadow-elegant: 0 8px 32px hsl(83 22% 46% / 0.12);
 }
 
 .dark {
@@ -72,6 +88,12 @@
   --border: 39 39 42; /* Dark gray border */
   --input: 39 39 42; /* Dark gray */
   --ring: 113 142 91; /* Sage green */
+  
+  /* Custom sage colors for dark mode */
+  --sage-light: 83 15% 25%; /* Dark sage for backgrounds */
+  --sage: 83 20% 40%; /* Medium sage */
+  --sage-dark: 83 22% 60%; /* Light sage for accents */
+  --sage-darker: 83 25% 70%; /* Lighter sage for hover states */
 }
 
 * {
@@ -87,6 +109,8 @@ body {
 .ql-editor {
   min-height: 100px;
   font-family: inherit;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
 }
 
 .ql-toolbar {
@@ -142,7 +166,8 @@ body {
 
 /* Prose styles for rich text content */
 .prose {
-  color: inherit;
+  color: hsl(var(--foreground));
+  max-width: none;
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
@@ -159,6 +184,7 @@ body {
 .prose p {
   margin-bottom: 1em;
   line-height: 1.6;
+  color: hsl(var(--foreground));
 }
 
 .prose ul, .prose ol {
@@ -168,6 +194,7 @@ body {
 
 .prose li {
   margin-bottom: 0.5em;
+  color: hsl(var(--foreground));
 }
 
 .prose strong {
@@ -177,6 +204,7 @@ body {
 
 .prose em {
   font-style: italic;
+  color: hsl(var(--foreground));
 }
 
 .prose a {

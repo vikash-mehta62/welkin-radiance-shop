@@ -67,7 +67,8 @@ export default {
 				sage: {
 					DEFAULT: 'hsl(var(--sage))',
 					light: 'hsl(var(--sage-light))',
-					dark: 'hsl(var(--sage-dark))'
+					dark: 'hsl(var(--sage-dark))',
+					darker: 'hsl(var(--sage-darker))'
 				},
 				cream: 'hsl(var(--cream))',
 				gold: 'hsl(var(--gold))',
