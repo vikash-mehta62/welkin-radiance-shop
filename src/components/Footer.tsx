@@ -19,6 +19,7 @@ const Footer = () => {
     { name: "Returns", href: "/returns" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Service", href: "/terms" },
+    { name: "Admin", href: "/admin" },
   ];
 
   const categories = [
