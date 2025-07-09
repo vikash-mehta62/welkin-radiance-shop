@@ -121,7 +121,7 @@ export const getAllProductAPI = async () => {
             throw new Error(response?.data?.message || "Something went wrong!");
         }
 
-        return response?.data?.products || [];
+        return response?.data?.data || [];
     } catch (error) {
         console.error("GET Product API ERROR:", error);
         toast.error(error?.response?.data?.message || "Failed to get product!");

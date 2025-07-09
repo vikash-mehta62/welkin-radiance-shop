@@ -1,6 +1,4 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AdminProvider } from "@/contexts/AdminContext";
 import Header from "@/components/Header";
@@ -22,56 +20,56 @@ import OrderManagement from "@/pages/admin/OrderManagement";
 import UserManagement from "@/pages/admin/UserManagement";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// AUTH
+import PrivateRoute from "@/components/auth/PrivateRoute";
+import OpenRoute from "@/components/auth/OpenRoute";
+import AdminRoute from "./components/auth/AdminRoute";
 
 const App = () => (
+
   
-    <TooltipProvider>
-      <AdminProvider>
-        
-         
-          <BrowserRouter>
-            <Routes>
-              {/* Auth Routes */}
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+  <TooltipProvider>
+    <AdminProvider>
+      <BrowserRouter>
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/login" element={<OpenRoute><Login /></OpenRoute>} />
+          <Route path="/signup" element={<OpenRoute><Signup /></OpenRoute>} />
 
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="products" element={<ProductManagement />} />
-                <Route path="products/create" element={<ProductForm />} />
-                <Route path="products/:id/edit" element={<ProductForm />} />
-                <Route path="orders" element={<OrderManagement />} />
-                <Route path="users" element={<UserManagement />} />
-              </Route>
+          {/* Admin Routes (Private) */}
+          <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<ProductManagement />} />
+            <Route path="products/create" element={<ProductForm />} />
+            <Route path="products/:id/edit" element={<ProductForm />} />
+            <Route path="orders" element={<OrderManagement />} />
+            <Route path="users" element={<UserManagement />} />
+          </Route>
 
-              {/* Client Routes */}
-              <Route path="/*" element={
-                <div className="min-h-screen flex flex-col">
-                  <Header />
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/products" element={<Products />} />
-                      <Route path="/products/:slug" element={<Product />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/cart" element={<Cart />} />
-                      <Route path="/checkout" element={<Checkout />} />
-                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                  <Footer />
-                </div>
-              } />
-            </Routes>
-          </BrowserRouter>
-      
-      </AdminProvider>
-    </TooltipProvider>
- 
+          {/* Client Routes (with layout) */}
+          <Route path="/*" element={
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/:slug" element={<Product />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+                  <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                  {/* Catch-all */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          } />
+        </Routes>
+      </BrowserRouter>
+    </AdminProvider>
+  </TooltipProvider>
 );
 
 export default App;

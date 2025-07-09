@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import {getAllProductAPI} from "@/services2/operations/product"
+import { v4 as uuidv4 } from "uuid"; // for generating unique ids
 
 export interface ProductFormData {
   id?: string;
@@ -233,15 +235,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     // Load from localStorage or use mock data
-    const savedProducts = localStorage.getItem('admin-products');
+    
     const savedOrders = localStorage.getItem('admin-orders');
     const savedUsers = localStorage.getItem('admin-users');
 
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
-    } else {
-      setProducts(mockProducts);
-    }
+   
 
     if (savedOrders) {
       setOrders(JSON.parse(savedOrders));
@@ -256,17 +254,48 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('admin-products', JSON.stringify(products));
-  }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('admin-orders', JSON.stringify(orders));
-  }, [orders]);
+    const fetchProducts = async () => {
+      try {
+        const response = await getAllProductAPI(); // this should return raw products array
 
-  useEffect(() => {
-    localStorage.setItem('admin-users', JSON.stringify(users));
-  }, [users]);
+        const transformed = response.map((item) => ({
+          id: item._id,
+          title: item.title,
+          slug: item.slug,
+          type: item.type,
+          category: item.category,
+          mrp: item.mrp,
+          sellingPrice: item.sellingPrice,
+          images: item.images,
+          keyBenefits: item.keyBenefits,
+          description: item.description,
+          skinSuitability: item.skinSuitability,
+          ingredients: item.ingredients,
+          howToUse: item.howToUse,
+          extraInfoBlocks: item.extraInfoBlocks?.map((block) => ({
+            id: block?._id ||uuidv4(),
+            image: block.image,
+            title: block.title,
+            content: block.content,
+          })) ?? [],
+          faqs: item.faqs?.map((faq) => ({
+            id: faq?._id || uuidv4(),
+            question: faq.question,
+            answer: faq.answer,
+          })) ?? [],
+        }));
+
+        setProducts(transformed);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
 
   const addProduct = (product: Omit<ProductFormData, 'id'>) => {
     const newProduct = {

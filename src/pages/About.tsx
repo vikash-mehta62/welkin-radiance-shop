@@ -26,26 +26,27 @@ const About = () => {
     }
   ];
 
-  const team = [
-    {
-      name: "Dr. Sarah Johnson",
-      role: "Chief Formulator",
-      bio: "15+ years in cosmetic chemistry, specializing in natural skincare formulations.",
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face"
-    },
-    {
-      name: "Michael Chen",
-      role: "Founder & CEO",
-      bio: "Passionate about clean beauty and sustainable business practices.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face"
-    },
-    {
-      name: "Emma Rodriguez",
-      role: "Head of Research",
-      bio: "PhD in Dermatology, focused on ingredient safety and efficacy.",
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=face"
-    }
-  ];
+const team = [
+  {
+    name: "XYZ",
+    role: "Chief Formulator",
+    bio: "15+ years in cosmetic chemistry, specializing in natural skincare formulations.",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "XYZ",
+    role: "Founder & CEO",
+    bio: "Passionate about clean beauty and sustainable business practices.",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "XYZ",
+    role: "Head of Research",
+    bio: "PhD in Dermatology, focused on ingredient safety and efficacy.",
+    image: "https://via.placeholder.com/150"
+  }
+];
+
 
   return (
     <div className="min-h-screen bg-background">

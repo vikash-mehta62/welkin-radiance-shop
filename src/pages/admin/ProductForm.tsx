@@ -10,9 +10,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { useAdmin, ProductFormData } from "@/contexts/AdminContext";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Plus, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, UploadCloud, X } from "lucide-react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { imageUpload } from "@/services2/operations/image";
+import {
+  createProductAPI,
+  updateProductAPI
+} from "@/services2/operations/product"
+
+export const categories = ['Anti-Aging', 'Acne Care', 'Dry Skin', 'Oily Skin', 'Sensitive Skin', 'Glow Boost', 'Hydrating'];
 
 const ProductForm = () => {
   const navigate = useNavigate();
@@ -39,13 +46,12 @@ const ProductForm = () => {
   });
 
   const productTypes = ['Serum', 'Cleanser', 'Moisturizer', 'Toner', 'Sunscreen', 'Face Mask', 'Eye Cream'];
-  const categories = ['Anti-Aging', 'Acne Care', 'Dry Skin', 'Oily Skin', 'Sensitive Skin', 'Glow Boost', 'Hydrating'];
 
   const quillModules = {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
       [{ 'color': [] }, { 'background': [] }],
       [{ 'align': [] }],
       ['link'],
@@ -83,7 +89,7 @@ const ProductForm = () => {
   const handleCategoryChange = (category: string, checked: boolean) => {
     setFormData(prev => ({
       ...prev,
-      category: checked 
+      category: checked
         ? [...prev.category, category]
         : prev.category.filter(c => c !== category)
     }));
@@ -153,7 +159,7 @@ const ProductForm = () => {
   const updateExtraInfoBlock = (index: number, field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      extraInfoBlocks: prev.extraInfoBlocks.map((block, i) => 
+      extraInfoBlocks: prev.extraInfoBlocks.map((block, i) =>
         i === index ? { ...block, [field]: value } : block
       )
     }));
@@ -180,29 +186,49 @@ const ProductForm = () => {
   const updateFAQ = (index: number, field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      faqs: prev.faqs.map((faq, i) => 
+      faqs: prev.faqs.map((faq, i) =>
         i === index ? { ...faq, [field]: value } : faq
       )
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+
+
+
+
+  const handleImageFileChange = async (index, file) => {
+    const uploaded = await imageUpload([file]);
+    if (uploaded.length > 0) {
+      updateImage(index, uploaded[0]); // Cloudinary URL
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    updateImage(index, ""); // Clear URL
+  };
+
+
+
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    
+console.log(formData)
+
+
     if (isEdit && id) {
-      updateProduct(id, formData);
+      await updateProductAPI(id, formData);
       toast({
         title: "Product Updated!",
         description: "Product has been updated successfully.",
       });
     } else {
-      addProduct(formData);
+      await createProductAPI(formData)
       toast({
         title: "Product Created!",
         description: "New product has been created successfully.",
       });
     }
-    
+
     navigate('/admin/products');
   };
 
@@ -313,13 +339,33 @@ const ProductForm = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             {formData.images.map((image, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  value={image}
-                  onChange={(e) => updateImage(index, e.target.value)}
-                  placeholder="Image URL or /placeholder.svg"
-                  className="flex-1"
-                />
+              <div key={index} className="flex items-center gap-2">
+                {image ? (
+                  <div className="relative w-24 h-24 rounded overflow-hidden border">
+                    <img src={image} alt={`Product Image ${index + 1}`} className="object-cover w-full h-full" />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-1 right-1 bg-white/80 rounded-full p-1 shadow"
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </button>
+                  </div>
+                ) : (
+                  <label className="cursor-pointer w-24 h-24 flex items-center justify-center border rounded">
+                    <UploadCloud className="h-6 w-6 text-muted-foreground" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) {
+                          handleImageFileChange(index, e.target.files[0]);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                )}
                 {formData.images.length > 2 && (
                   <Button type="button" variant="outline" size="sm" onClick={() => removeImage(index)}>
                     <X className="h-4 w-4" />
@@ -331,6 +377,8 @@ const ProductForm = () => {
               <Plus className="h-4 w-4 mr-2" />
               Add Image
             </Button>
+
+
           </CardContent>
         </Card>
 
@@ -445,11 +493,38 @@ const ProductForm = () => {
                   </Button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    value={block.image}
-                    onChange={(e) => updateExtraInfoBlock(index, 'image', e.target.value)}
-                    placeholder="Image URL"
-                  />
+                  <div className="flex gap-2 items-center">
+                    {block.image ? (
+                      <div className="relative w-24 h-24 border rounded overflow-hidden">
+                        <img src={block.image} alt="Info Block" className="object-cover w-full h-full" />
+                        <button
+                          type="button"
+                          onClick={() => updateExtraInfoBlock(index, "image", "")}
+                          className="absolute top-1 right-1 bg-white/80 rounded-full p-1 shadow"
+                        >
+                          <Trash2 className="h-4 w-4 text-red-500" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer w-24 h-24 flex items-center justify-center border rounded">
+                        <UploadCloud className="h-6 w-6 text-muted-foreground" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            if (e.target.files?.[0]) {
+                              const uploaded = await imageUpload([e.target.files[0]]);
+                              if (uploaded.length > 0) {
+                                updateExtraInfoBlock(index, "image", uploaded[0]);
+                              }
+                            }
+                          }}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+
                   <Input
                     value={block.title}
                     onChange={(e) => updateExtraInfoBlock(index, 'title', e.target.value)}

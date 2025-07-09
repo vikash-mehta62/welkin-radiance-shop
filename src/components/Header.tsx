@@ -7,6 +7,16 @@ import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useAdmin } from '@/contexts/AdminContext';
 import { RootState } from '@/redux/store';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
+import { categories } from '@/pages/admin/ProductForm';
+
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,19 +24,13 @@ const Header = () => {
   const { items } = useCart(); // Use 'items' instead of 'cart'
   const { products } = useAdmin(); // Use 'products' to extract categories
   const navigate = useNavigate();
-  
+
   // Get user from Redux store
   const { user } = useSelector((state: RootState) => state.auth);
 
   const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
 
-  // Extract unique categories from products
-  const categories = Array.from(
-    new Set(products.flatMap(product => product.category))
-  ).map(categoryName => ({
-    _id: categoryName.toLowerCase().replace(/\s+/g, '-'),
-    name: categoryName
-  }));
+  const allCategories = categories
 
   const handleCategoryClick = (categoryId: string) => {
     navigate(`/products?category=${categoryId}`);
@@ -51,41 +55,62 @@ const Header = () => {
             <Link to="/" className="text-foreground hover:text-primary transition-colors">
               Home
             </Link>
-            
+
             {/* Products Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={() => setIsProductsDropdownOpen(true)}
-              onMouseLeave={() => setIsProductsDropdownOpen(false)}
-            >
-              <button className="flex items-center text-foreground hover:text-primary transition-colors">
-                Products
-                <ChevronDown className="ml-1 h-4 w-4" />
-              </button>
-              
-              {isProductsDropdownOpen && categories.length > 0 && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-background border border-border rounded-md shadow-lg z-50">
-                  <div className="py-2">
-                    <Link
-                      to="/products"
-                      className="block px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground"
-                      onClick={() => setIsProductsDropdownOpen(false)}
-                    >
-                      All Products
-                    </Link>
-                    {categories.map((category) => (
-                      <button
-                        key={category._id}
-                        onClick={() => handleCategoryClick(category._id)}
-                        className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground"
-                      >
-                        {category.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname.startsWith('/products')
+                    ? "text-primary border-b-2 border-primary pb-1"
+                    : "text-muted-foreground"
+                    }`}>
+                    Products
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
+                      <div className="row-span-3">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                            to="/products"
+                          >
+                            <div className="mb-2 mt-4 text-lg font-medium">
+                              All Products
+                            </div>
+                            <p className="text-sm leading-tight text-muted-foreground">
+                              Explore our complete range of premium skincare products
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="text-sm font-medium text-muted-foreground mb-2">Categories</div>
+                        {allCategories.slice(0, 6).map((category) => (
+                          <NavigationMenuLink key={category} asChild>
+                            <Link
+                              to={`/products?category=${encodeURIComponent(category)}`}
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                            >
+                              <div className="text-sm font-medium leading-none">{category}</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        ))}
+                        {allCategories.length > 6 && (
+                          <NavigationMenuLink asChild>
+                            <Link
+                              to="/products"
+                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-primary"
+                            >
+                              <div className="text-sm font-medium leading-none">View All Categories</div>
+                            </Link>
+                          </NavigationMenuLink>
+                        )}
+                      </div>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
 
             <Link to="/about" className="text-foreground hover:text-primary transition-colors">
               About
@@ -117,7 +142,7 @@ const Header = () => {
                 </Link>
               </>
             )}
-            
+
             <Link to="/cart" className="relative">
               <Button variant="ghost" size="sm">
                 <ShoppingCart className="h-4 w-4" />
@@ -153,22 +178,63 @@ const Header = () => {
               >
                 Home
               </Link>
-              <Link
-                to="/products"
-                className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                All Products
-              </Link>
-              {categories.map((category) => (
+
+
+
+
+              {/* Mobile Products Section */}
+              <div className="space-y-2">
                 <button
-                  key={category._id}
-                  onClick={() => handleCategoryClick(category._id)}
-                  className="block w-full text-left px-6 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent rounded-md"
+                  className="flex items-center justify-between w-full px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
+                  onClick={() => setIsProductsDropdownOpen(!isProductsDropdownOpen)}
                 >
-                  {category.name}
+                  <span>Products</span>
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${isProductsDropdownOpen ? 'rotate-180' : ''
+                      }`}
+                  />
                 </button>
-              ))}
+                {isProductsDropdownOpen && (
+                  <div className="pl-4 space-y-2">
+                    <Link
+                      to="/products"
+                      className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        setIsProductsDropdownOpen(false);
+                      }}
+                    >
+                      All Products
+                    </Link>
+                    <div className="text-sm font-medium text-muted-foreground mt-2">Categories:</div>
+                    {allCategories.slice(0, 4).map((category) => (
+                      <Link
+                        key={category}
+                        to={`/products?category=${encodeURIComponent(category)}`}
+                        className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setIsProductsDropdownOpen(false);
+                        }}
+                      >
+                        {category}
+                      </Link>
+                    ))}
+                    {allCategories.length > 4 && (
+                      <Link
+                        to="/products"
+                        className="block text-sm text-primary hover:text-primary/90 transition-colors"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          setIsProductsDropdownOpen(false);
+                        }}
+                      >
+                        View All Categories
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </div>
               <Link
                 to="/about"
                 className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
@@ -176,7 +242,7 @@ const Header = () => {
               >
                 About
               </Link>
-              
+
               {/* Mobile Auth Links */}
               <div className="pt-4 space-y-2">
                 {user ? (
@@ -206,7 +272,7 @@ const Header = () => {
                     </Link>
                   </>
                 )}
-                
+
                 <Link
                   to="/cart"
                   className="flex items-center px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
