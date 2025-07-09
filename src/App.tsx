@@ -1,5 +1,4 @@
 
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -14,6 +13,8 @@ import About from "@/pages/About";
 import Profile from "@/pages/Profile";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import ProductManagement from "@/pages/admin/ProductManagement";
 import ProductForm from "@/pages/admin/ProductForm";
@@ -31,6 +32,10 @@ const App = () => (
          
           <BrowserRouter>
             <Routes>
+              {/* Auth Routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+
               {/* Admin Routes */}
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
