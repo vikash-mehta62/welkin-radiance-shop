@@ -11,14 +11,22 @@ import { RootState } from '@/redux/store';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
-  const { cart } = useCart();
-  const { categories } = useAdmin();
+  const { items } = useCart(); // Use 'items' instead of 'cart'
+  const { products } = useAdmin(); // Use 'products' to extract categories
   const navigate = useNavigate();
   
   // Get user from Redux store
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
+
+  // Extract unique categories from products
+  const categories = Array.from(
+    new Set(products.flatMap(product => product.category))
+  ).map(categoryName => ({
+    _id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+    name: categoryName
+  }));
 
   const handleCategoryClick = (categoryId: string) => {
     navigate(`/products?category=${categoryId}`);
