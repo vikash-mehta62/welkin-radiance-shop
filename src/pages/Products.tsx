@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +10,7 @@ import { Filter, Grid, List } from "lucide-react";
 
 const Products = () => {
   const { products } = useAdmin();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -16,6 +18,27 @@ const Products = () => {
   // Get unique categories from products
   const allCategories = Array.from(new Set(products.flatMap(product => product.category)));
   const categories = ['all', ...allCategories];
+
+  // Handle URL category parameter
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl && allCategories.includes(categoryFromUrl)) {
+      setSelectedCategory(categoryFromUrl);
+    } else if (categoryFromUrl === null) {
+      setSelectedCategory('all');
+    }
+  }, [searchParams, allCategories]);
+
+  // Update URL when category changes
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    if (category === 'all') {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', category);
+    }
+    setSearchParams(searchParams);
+  };
 
   const filteredProducts = products.filter(product => 
     selectedCategory === 'all' || product.category.includes(selectedCategory)
@@ -53,10 +76,13 @@ const Products = () => {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            All Products
+            {selectedCategory === 'all' ? 'All Products' : `${selectedCategory} Products`}
           </h1>
           <p className="text-lg text-muted-foreground">
-            Discover our complete range of premium skincare products
+            {selectedCategory === 'all' 
+              ? 'Discover our complete range of premium skincare products'
+              : `Explore our ${selectedCategory.toLowerCase()} collection`
+            }
           </p>
         </div>
 
@@ -68,7 +94,7 @@ const Products = () => {
                 {/* Category Filter */}
                 <div className="flex items-center space-x-2">
                   <Filter className="h-5 w-5 text-sage-dark" />
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <Select value={selectedCategory} onValueChange={handleCategoryChange}>
                     <SelectTrigger className="w-[180px] border-sage-light">
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
@@ -123,6 +149,7 @@ const Products = () => {
         <div className="mb-6">
           <p className="text-muted-foreground">
             Showing {sortedProducts.length} of {products.length} products
+            {selectedCategory !== 'all' && ` in ${selectedCategory}`}
           </p>
         </div>
 
@@ -156,7 +183,9 @@ const Products = () => {
               <p className="text-muted-foreground mb-4">
                 {products.length === 0 
                   ? "No products have been created yet. Create your first product in the admin panel."
-                  : "Try adjusting your filters to see more products"
+                  : selectedCategory === 'all'
+                    ? "Try adjusting your filters to see more products"
+                    : `No products found in ${selectedCategory} category. Try selecting a different category.`
                 }
               </p>
               {products.length === 0 ? (
@@ -164,8 +193,8 @@ const Products = () => {
                   <a href="/admin/products/create">Create Product</a>
                 </Button>
               ) : (
-                <Button variant="luxury" onClick={() => setSelectedCategory('all')}>
-                  Clear Filters
+                <Button variant="luxury" onClick={() => handleCategoryChange('all')}>
+                  View All Products
                 </Button>
               )}
             </CardContent>
