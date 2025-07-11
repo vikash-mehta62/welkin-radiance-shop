@@ -154,3 +154,18 @@ export const creditmemos = {
   UPDATE_CREDIT_MEMO_BY_ID: BASE_URL + "/credit-memo/update",
 
 }
+
+
+
+
+  export const paymentEndpoints ={
+    PRODUCT_PAYMENT_API: BASE_URL + "/order/capturePayment",
+    PRODUCT_VERIFY_API: BASE_URL + "/order/verifyPayment",
+    SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/order/sendPaymentSuccessEmail",
+    
+    
+    // Get all orders
+    GET_ALL_ORDER: BASE_URL + "/order/get",
+
+    
+  }

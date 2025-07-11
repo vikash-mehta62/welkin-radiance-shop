@@ -6,7 +6,7 @@ function PrivateRoute({ children }) {
   const { token, user } = useSelector((state) => state.auth);
 
   if (!token) {
-    return <Navigate to="/auth" />;
+    return <Navigate to="/login" />;
   }
 
   if (user?.role === "admin") {

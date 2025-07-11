@@ -1,138 +1,93 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"); // Erase if already required
 
-const generateOrderNumber = () => {
-  const randomNumber = Math.floor(100000 + Math.random() * 900000);
-  return `${randomNumber}`;
-};
-
-const addressSchema = {
-  name: { type: String, required: true },
-  email: { type: String },
-  phone: { type: String },
-  address: { type: String },
-  city: { type: String },
-  postalCode: { type: String },
-  country: { type: String },
-};
-
-const palletDataSchema = new mongoose.Schema(
-  {
-    worker: String,
-    palletCount: Number,
-    boxesPerPallet: {
-      type: Map,
-      of: Number, // key: item ID, value: number of boxes
-    },
-    totalBoxes: Number,
-    chargePerPallet: Number,
-    totalPalletCharge: Number,
-    selectedItems: [String], // or [mongoose.Schema.Types.ObjectId] if referencing items
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-  },
-  { _id: false }
-);
-
-const paymentDetailsSchema = new mongoose.Schema(
-  {
-    method: {
-      type: String,
-      enum: ["cash", "creditcard", "cheque"],
-      required: true,
-    },
-    transactionId: {
-      type: String,
-      required: function () {
-        return this.method === "creditcard";
-      },
-    },
-    notes: {
-      type: String,
-      required: function () {
-        return this.method === "cash" || this.method === "cheque";
-      },
-    },
-    paymentDate: {
-      type: Date,
-    },
-  },
-  { _id: false }
-);
-
+// Declare the Schema of the Mongo model
 const orderSchema = new mongoose.Schema(
   {
-    items: {
-      type: Array,
+    order_id: {
+      type: String,
       required: true,
     },
-    orderNumber: {
-      type: String,
-    },
-    shippinCost: {
+    shipment_id: {
       type: Number,
-      default: 0,
+      // required: true,
     },
-    plateCount: {
-      type: Number,
-      default: 0,
-    },
-    store: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "auth",
+      required: true,
     },
-    status: {
-      type: String,
-      default: "Processing",
+    shippingInfo: {
+      name: {
+        type: String,
+        required: true,
+      },
+      address: {
+        type: String,
+        required: true,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,
+      },
+      other: {
+        type: String,
+      },
+      pincode: {
+        type: Number,
+        required: true,
+      },
     },
-    paymentStatus: {
-      type: String,
-      default: "pending",
+    paymentInfo: {
+      razorpayOrderId: {
+        type: String,
+        required: true,
+      },
+      razorpayPaymentId: {
+        type: String,
+        required: true,
+      },
     },
-    paymentAmount: {
-      type: String,
-      default: 0,
-    },
-    orderType: {
-      type: String,
-      default: "Regural",
-    },
-    paymentDetails: {
-      type: paymentDetailsSchema,
-    },
-    isDelete: {
-      type: Boolean,
-      default: false,
-    },
-    deleted: {
-      reason: { type: String },
-      amount: { type: Number }, // spelling fix
-    },
+    orderItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
 
-    total: {
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+    paidAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    month: {
       type: Number,
+      default: new Date().getMonth(),
     },
-    billingAddress: {
-      type: addressSchema,
-      required: true,
-    },
-    creditMemos: { type: mongoose.Schema.Types.ObjectId, ref: "CreditMemo" },
-
-
-
-     notes: {
+    totalPrice: {
       type: String,
-    },
-
-
-    shippingAddress: {
-      type: addressSchema,
       required: true,
     },
-    palletData: palletDataSchema,
+
+    orderStatus: {
+      type: String,
+      enum: ["Ordered", "Processing", "Shipped", "Delivered", "Cancelled"],
+      default: "Ordered",
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
+//Export the model
 module.exports = mongoose.model("Order", orderSchema);

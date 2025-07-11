@@ -13,8 +13,8 @@ exports.auth = asyncHandler(async (req, res, next) => {
   try {
     // Extracting JWT from request cookies, body or header
     const token =
-      req.cookies.token ||
-      req.body.token ||
+      req?.cookies?.token ||
+      req?.body?.token ||
       req.header("Authorization").replace("Bearer ", "");
 
     // console.log(token)

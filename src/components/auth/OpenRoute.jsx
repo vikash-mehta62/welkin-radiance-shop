@@ -10,14 +10,9 @@ function OpenRoute({ children }) {
   }
 
   if (user?.role === "admin") {
-    return <Navigate to="/admin/dashboard" />;
+    return <Navigate to="/admin" />;
   }
-  if (user?.role === "member") {
-    return <Navigate to="/member/dashboard" />;
-  }
-  if (user?.role === "store") {
-    return <Navigate to="/store/dashboard" />;
-  }
+ 
 
   return <Navigate to="/" />;
 }

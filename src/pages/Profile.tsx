@@ -7,22 +7,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { User, MapPin, Phone, Mail, Calendar, Package, CreditCard, Settings } from "lucide-react";
+import {getUserAPI} from "@/services2/operations/auth"
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
+  const authData = useSelector((state: RootState) => state.auth);
 
+
+  console.log(authData)
   // Mock user data
   const user = {
-    name: "Sarah Johnson",
-    email: "sarah.johnson@email.com",
-    phone: "+91 98765 43210",
-    dateJoined: "March 2023",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+  name: authData.user.name,
+  email: authData.user.email,
+  phone: `+91 ${authData.user.phone}`,
+  dateJoined: new Date(authData.user.createdAt).toLocaleString('en-US', {
+    month: 'long',
+    year: 'numeric'
+  }),
+  avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(authData.user.name)}&background=random`,
     addresses: [
       {
         id: "1",
         type: "Home",
-        name: "Sarah Johnson",
+        name: " Johnson",
         street: "123 Green Valley Road",
         city: "Mumbai",
         state: "Maharashtra",
@@ -32,7 +42,7 @@ const Profile = () => {
       {
         id: "2",
         type: "Office",
-        name: "Sarah Johnson",
+        name: "  Johnson",
         street: "456 Business District",
         city: "Mumbai",
         state: "Maharashtra", 
@@ -101,7 +111,7 @@ const Profile = () => {
 
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-2 mb-8">
             <TabsTrigger value="profile" className="flex items-center gap-2">
               <User className="h-4 w-4" />
               Profile
@@ -110,14 +120,7 @@ const Profile = () => {
               <Package className="h-4 w-4" />
               Orders
             </TabsTrigger>
-            <TabsTrigger value="addresses" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              Addresses
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Settings
-            </TabsTrigger>
+           
           </TabsList>
 
           {/* Profile Information */}
@@ -130,22 +133,19 @@ const Profile = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="name">Full Name</Label>
-                    <Input id="name" defaultValue={user.name} />
+                    <Input disabled id="name" defaultValue={user.name} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input id="email" type="email" defaultValue={user.email} />
+                    <Input disabled id="email" type="email" defaultValue={user.email} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" defaultValue={user.phone} />
+                    <Input disabled id="phone" defaultValue={user.phone} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="birthday">Date of Birth</Label>
-                    <Input id="birthday" type="date" />
-                  </div>
+                 
                 </div>
-                <Button variant="hero">Update Profile</Button>
+               
               </CardContent>
             </Card>
           </TabsContent>

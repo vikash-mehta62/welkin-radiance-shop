@@ -138,16 +138,13 @@ const Cart = () => {
                   <span className="font-medium text-sage">Free</span>
                 </div>
                 
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Tax</span>
-                  <span className="font-medium">₹{Math.round(total * 0.18)}</span>
-                </div>
+               
                 
                 <Separator />
                 
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
-                  <span className="text-primary">₹{total + Math.round(total * 0.18)}</span>
+                  <span className="text-primary">₹{total }</span>
                 </div>
                 
                 <div className="space-y-3 pt-4">
