@@ -6,39 +6,12 @@ const productSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1),
   type: z.string().min(1),
-  category: z.array(z.string().min(1)),
+  category: z.array(z.string().min(1)).min(1),
   mrp: z.number().nonnegative(),
   sellingPrice: z.number().nonnegative(),
   images: z.array(z.string().url()).min(1),
   keyBenefits: z.string().min(1),
   description: z.string().min(1),
-  skinSuitability: z.string().min(1),
-  ingredients: z.array(z.string().min(1)).min(1),
-  howToUse: z.string().min(1),
-  extraInfoBlocks: z.array(
-    z.object({
-      image: z.string().url(),
-      title: z.string().min(1),
-      content: z.string().min(1),
-    })
-  ),
-  faqs: z.array(
-    z.object({
-      question: z.string().min(1),
-      answer: z.string().min(1),
-    })
-  ),
-  currentStock: z.number().nonnegative().optional(),
-  inventoryHistory: z
-    .array(
-      z.object({
-        date: z.coerce.date(),
-        sold: z.number().nonnegative(),
-        refunded: z.number().nonnegative(),
-        stock: z.number().nonnegative(),
-      })
-    )
-    .optional(),
 });
 
 // ✅ Controller
