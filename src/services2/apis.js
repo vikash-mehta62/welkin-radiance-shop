@@ -1,6 +1,6 @@
 
-// const BASE_URL = "http://localhost:4000/api/v1"
-const BASE_URL = "https://welkin-radiance-shop.onrender.com/api/v1"
+const BASE_URL = "http://localhost:4000/api/v1"
+// const BASE_URL = "https://welkin-radiance-shop.onrender.com/api/v1"
 // const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const endpoints = {
@@ -13,11 +13,11 @@ export const endpoints = {
   GET_ALL_STORES_API: BASE_URL + "/auth/all-stores",
   UPDATE_MEMBER_PERMISSION_API: BASE_URL + "/auth/update",
   UPDATE_STORE: BASE_URL + "/auth/update-store",
-  FETCH_MY_PROFILE_API : BASE_URL + "/auth/fetchMyProfile",
-  UPDATE_PASSWORD_API : BASE_URL + "/auth/update-password",
-  USER_WITH_ORDER :BASE_URL + "/order/user",
-  VENDOR_WITH_ORDER :BASE_URL + "/purchase-orders/user",
-  
+  FETCH_MY_PROFILE_API: BASE_URL + "/auth/fetchMyProfile",
+  UPDATE_PASSWORD_API: BASE_URL + "/auth/update-password",
+  USER_WITH_ORDER: BASE_URL + "/order/user",
+  VENDOR_WITH_ORDER: BASE_URL + "/purchase-orders/user",
+
 
 
 
@@ -41,12 +41,12 @@ export const product = {
   GET_PRODUCT_ORDER: BASE_URL + "/product/get-order",
   DELETE_PRODUCT: BASE_URL + "/product/delete",
   DELETE_PRODUCT: BASE_URL + "/product/delete",
- TRASH_PRODUCT: BASE_URL + "/product/trash",
- QUANITY_ADD_PRODUCT: BASE_URL + "/product/addQuantity",
+  TRASH_PRODUCT: BASE_URL + "/product/trash",
+  QUANITY_ADD_PRODUCT: BASE_URL + "/product/addQuantity",
   UPDATE_PRODUCT_PRICE: BASE_URL + "/product/update-price",
   UPDATE_BULK_DISCOUNT: BASE_URL + "/product/update-bulk-discounts",
   GET_PRODUCT_BY_STORE: BASE_URL + "/product/get-by-store",
- REFRESH_PRODUCT: BASE_URL + "/product/reset-history",
+  REFRESH_PRODUCT: BASE_URL + "/product/reset-history",
 }
 
 export const priceList = {
@@ -70,7 +70,9 @@ export const order = {
   CREATE_ORDER: BASE_URL + "/order/create",
 
   GET_ALL_ORDER: BASE_URL + "/order/getAll",
-  GET_ORDER: BASE_URL + "/order/get",
+  UPDATE_ORDER_STATUS: BASE_URL + "/order/update",
+
+  GET_ORDER_FOR_USER: BASE_URL + "/order/get",
   DELETE_ORDER: BASE_URL + "/order/delete",
   UPDATE_ORDER: BASE_URL + "/order/update",
   UPDATE_ORDER_ORDER_TYPE: BASE_URL + "/order/update-otype",
@@ -159,14 +161,14 @@ export const creditmemos = {
 
 
 
-  export const paymentEndpoints ={
-    PRODUCT_PAYMENT_API: BASE_URL + "/order/capturePayment",
-    PRODUCT_VERIFY_API: BASE_URL + "/order/verifyPayment",
-    SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/order/sendPaymentSuccessEmail",
-    
-    
-    // Get all orders
-    GET_ALL_ORDER: BASE_URL + "/order/get",
+export const paymentEndpoints = {
+  PRODUCT_PAYMENT_API: BASE_URL + "/order/capturePayment",
+  PRODUCT_VERIFY_API: BASE_URL + "/order/verifyPayment",
+  SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/order/sendPaymentSuccessEmail",
 
-    
-  }
+
+  // Get all orders
+  GET_ALL_ORDER: BASE_URL + "/order/get",
+
+
+}

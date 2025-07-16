@@ -213,8 +213,41 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-module.exports = { 
-  
+
+const deleteProductCtrl = async (req, res) => {
+  try {
+    const { id } = req.params; // Get id from params
+
+    // Check if the product exists
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Delete the product
+    await Product.findByIdAndDelete(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while deleting product",
+    });
+  }
+};
+
+
+module.exports = {
+
   createProduct,
   updateProduct,
-  getAllProducts}
+  getAllProducts,
+  deleteProductCtrl
+}

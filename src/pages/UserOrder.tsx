@@ -19,32 +19,23 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import {
-  getAllOrder,
-  updateOrderStatusApi,
-} from "@/services2/operations/order";
+import { getUserOrderApi } from "@/services2/operations/order";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 
-const OrderManagement = () => {
+const UserOrder = () => {
   const [orders, setOrders] = useState([]);
-  const { updateOrderStatus } = useAdmin();
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const { token } = useSelector((state: RootState) => state.auth);
+  const { user, token } = useSelector((state: RootState) => state.auth);
 
   const fetchOrders = async () => {
-    const response = await getAllOrder(token);
+    const response = await getUserOrderApi(user._id, token);
     setOrders(response);
   };
 
   useEffect(() => {
     fetchOrders();
   }, []);
-
-  const handleStatusUpdate = async (id, orderStatus) => {
-    await updateOrderStatusApi(id, orderStatus, token);
-    fetchOrders();
-  };
 
   const filteredOrders =
     statusFilter === "all"
@@ -179,28 +170,6 @@ const OrderManagement = () => {
               </div>
 
               <div className="flex items-center justify-between pt-4 border-t border-sage-light/30">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Status:</span>
-                  <Select
-                    value={order?.orderStatus}
-                    onValueChange={(value) =>
-                      handleStatusUpdate(order._id, value)
-                    }
-                  >
-                    <SelectTrigger className="w-32">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Ordered">Ordered</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="processing">Processing</SelectItem>
-                      <SelectItem value="shipped">Shipped</SelectItem>
-                      <SelectItem value="delivered">Delivered</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="outline">
@@ -310,4 +279,4 @@ const OrderManagement = () => {
   );
 };
 
-export default OrderManagement;
+export default UserOrder;

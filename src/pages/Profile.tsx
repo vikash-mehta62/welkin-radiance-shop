@@ -6,28 +6,38 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { User, MapPin, Phone, Mail, Calendar, Package, CreditCard, Settings } from "lucide-react";
-import {getUserAPI} from "@/services2/operations/auth"
+import {
+  User,
+  MapPin,
+  Phone,
+  Mail,
+  Calendar,
+  Package,
+  CreditCard,
+  Settings,
+} from "lucide-react";
+import { getUserAPI } from "@/services2/operations/auth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-
+import UserOrder from "./UserOrder";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const authData = useSelector((state: RootState) => state.auth);
 
-
-  console.log(authData)
+  console.log(authData);
   // Mock user data
   const user = {
-  name: authData.user.name,
-  email: authData.user.email,
-  phone: `+91 ${authData.user.phone}`,
-  dateJoined: new Date(authData.user.createdAt).toLocaleString('en-US', {
-    month: 'long',
-    year: 'numeric'
-  }),
-  avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(authData.user.name)}&background=random`,
+    name: authData.user.name,
+    email: authData.user.email,
+    phone: `+91 ${authData.user.phone}`,
+    dateJoined: new Date(authData.user.createdAt).toLocaleString("en-US", {
+      month: "long",
+      year: "numeric",
+    }),
+    avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      authData.user.name
+    )}&background=random`,
     addresses: [
       {
         id: "1",
@@ -37,7 +47,7 @@ const Profile = () => {
         city: "Mumbai",
         state: "Maharashtra",
         pincode: "400001",
-        isDefault: true
+        isDefault: true,
       },
       {
         id: "2",
@@ -45,11 +55,11 @@ const Profile = () => {
         name: "  Johnson",
         street: "456 Business District",
         city: "Mumbai",
-        state: "Maharashtra", 
+        state: "Maharashtra",
         pincode: "400002",
-        isDefault: false
-      }
-    ]
+        isDefault: false,
+      },
+    ],
   };
 
   // Mock order data
@@ -62,19 +72,19 @@ const Profile = () => {
       items: [
         { name: "Brightening Vitamin C Serum", quantity: 1, price: 999 },
         { name: "Hydrating Hyaluronic Moisturizer", quantity: 1, price: 699 },
-        { name: "Gentle Foaming Cleanser", quantity: 1, price: 449 }
-      ]
+        { name: "Gentle Foaming Cleanser", quantity: 1, price: 449 },
+      ],
     },
     {
-      id: "ORD-2024-002", 
+      id: "ORD-2024-002",
       date: "Nov 28, 2024",
       status: "Processing",
       total: 1648,
       items: [
         { name: "Retinol Night Serum", quantity: 1, price: 1199 },
-        { name: "Daily Protection Sunscreen SPF 50", quantity: 1, price: 549 }
-      ]
-    }
+        { name: "Daily Protection Sunscreen SPF 50", quantity: 1, price: 549 },
+      ],
+    },
   ];
 
   return (
@@ -92,8 +102,12 @@ const Profile = () => {
                 />
               </div>
               <div className="text-center md:text-left flex-1">
-                <h1 className="text-3xl font-bold text-foreground mb-2">{user.name}</h1>
-                <p className="text-muted-foreground mb-4">Member since {user.dateJoined}</p>
+                <h1 className="text-3xl font-bold text-foreground mb-2">
+                  {user.name}
+                </h1>
+                <p className="text-muted-foreground mb-4">
+                  Member since {user.dateJoined}
+                </p>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Mail className="h-4 w-4" />
@@ -120,7 +134,6 @@ const Profile = () => {
               <Package className="h-4 w-4" />
               Orders
             </TabsTrigger>
-           
           </TabsList>
 
           {/* Profile Information */}
@@ -137,144 +150,25 @@ const Profile = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address</Label>
-                    <Input disabled id="email" type="email" defaultValue={user.email} />
+                    <Input
+                      disabled
+                      id="email"
+                      type="email"
+                      defaultValue={user.email}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number</Label>
                     <Input disabled id="phone" defaultValue={user.phone} />
                   </div>
-                 
                 </div>
-               
               </CardContent>
             </Card>
           </TabsContent>
 
           {/* Order History */}
           <TabsContent value="orders">
-            <div className="space-y-6">
-              {orders.map((order) => (
-                <Card key={order.id} className="border-sage-light/50 shadow-soft">
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg">Order {order.id}</CardTitle>
-                        <p className="text-muted-foreground flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          {order.date}
-                        </p>
-                      </div>
-                      <Badge 
-                        variant={order.status === "Delivered" ? "default" : "outline"}
-                        className={order.status === "Delivered" ? "bg-sage text-background" : ""}
-                      >
-                        {order.status}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {order.items.map((item, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <div>
-                            <p className="font-medium text-foreground">{item.name}</p>
-                            <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
-                          </div>
-                          <p className="font-medium text-foreground">₹{item.price}</p>
-                        </div>
-                      ))}
-                      <Separator />
-                      <div className="flex justify-between items-center font-semibold">
-                        <span>Total Amount</span>
-                        <span className="text-primary">₹{order.total}</span>
-                      </div>
-                      <div className="flex gap-4">
-                        <Button variant="minimal" size="sm">View Details</Button>
-                        {order.status === "Delivered" && (
-                          <Button variant="outline" size="sm">Reorder</Button>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Addresses */}
-          <TabsContent value="addresses">
-            <div className="space-y-6">
-              {user.addresses.map((address) => (
-                <Card key={address.id} className="border-sage-light/50 shadow-soft">
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline">{address.type}</Badge>
-                        {address.isDefault && <Badge className="bg-sage text-background">Default</Badge>}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="sm">Edit</Button>
-                        <Button variant="ghost" size="sm">Delete</Button>
-                      </div>
-                    </div>
-                    <div className="space-y-1 text-muted-foreground">
-                      <p className="font-medium text-foreground">{address.name}</p>
-                      <p>{address.street}</p>
-                      <p>{address.city}, {address.state} - {address.pincode}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-              <Button variant="hero" className="w-full md:w-auto">
-                Add New Address
-              </Button>
-            </div>
-          </TabsContent>
-
-          {/* Settings */}
-          <TabsContent value="settings">
-            <div className="space-y-6">
-              <Card className="border-sage-light/50 shadow-soft">
-                <CardHeader>
-                  <CardTitle>Account Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-foreground">Email Notifications</p>
-                        <p className="text-sm text-muted-foreground">Receive updates about orders and promotions</p>
-                      </div>
-                      <Button variant="outline" size="sm">Configure</Button>
-                    </div>
-                    <Separator />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-foreground">SMS Notifications</p>
-                        <p className="text-sm text-muted-foreground">Get order updates via SMS</p>
-                      </div>
-                      <Button variant="outline" size="sm">Configure</Button>
-                    </div>
-                    <Separator />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-foreground">Change Password</p>
-                        <p className="text-sm text-muted-foreground">Update your account password</p>
-                      </div>
-                      <Button variant="outline" size="sm">Change</Button>
-                    </div>
-                    <Separator />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium text-destructive">Delete Account</p>
-                        <p className="text-sm text-muted-foreground">Permanently delete your account and data</p>
-                      </div>
-                      <Button variant="destructive" size="sm">Delete</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            <UserOrder />
           </TabsContent>
         </Tabs>
       </div>

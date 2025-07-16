@@ -140,33 +140,33 @@ const paymentVerification = async (req, res) => {
 
 
 
-const createOrder = asyncHandler(async (products, userId, address, razorpay_order_id, razorpay_payment_id,payable, res) => {
+const createOrder = asyncHandler(async (products, userId, address, razorpay_order_id, razorpay_payment_id, payable, res) => {
   const userDetails = await User.findById(userId);
-console.log(payable)
+  console.log(payable)
   const {
     billingCity,
     billingPincode,
     billingState,
     billingAddress,
-     } = address;
+  } = address;
 
 
   const email = userDetails.email;
 
   try {
-         const orderId = uuidv4();
+    const orderId = uuidv4();
 
     const order = await Order.create({
       order_id: orderId, // Provide order_id
       shipment_id: 123, // Example shipment_id
       user: userId,
       shippingInfo: {
-              name: userDetails.name, // assuming user has a name field
-              address: billingAddress,
-              city: billingCity,
-              state: billingState,
-              pincode: billingPincode,
-            },
+        name: userDetails.name, // assuming user has a name field
+        address: billingAddress,
+        city: billingCity,
+        state: billingState,
+        pincode: billingPincode,
+      },
       paymentInfo: {
         razorpayOrderId: razorpay_order_id,
         razorpayPaymentId: razorpay_payment_id,
@@ -186,7 +186,7 @@ console.log(payable)
         throw new Error(`Product with ID ${item.id} not found`);
       }
 
-    
+
       if (product.quantity < 0) {
         throw new Error(`Not enough stock for product with ID ${item.product._id}`);
       }
@@ -197,7 +197,7 @@ console.log(payable)
 
 
 
-   
+
 
   } catch (error) {
     console.error(error);
@@ -215,47 +215,96 @@ console.log(payable)
 
 
 
-const getAllOrder = async(req,res)=>{
+const getAllOrder = async (req, res) => {
   try {
-
-    const userId = req.user.id
-
-    if(!userId){
-      return res.status(401).json({
-        success: false,
-        message: `User is not Found`,
-      })
-    }
-    
-    const orders = await Order.find({ user: userId })
-    .populate({
-        path: 'orderItems.product',
-        model: 'Product',
-    })
-    .exec();
-
-console.log('Populated Orders:', orders);
+    const orders = await Order.find()
+      .populate("user")
+      .populate("orderItems.product"); // <- populate nested product in orderItems
 
     return res.status(200).json({
+      success: true,
       orders,
-success: true,
-message: `Fetch Orders Successfully`,
-})
-
+    });
   } catch (error) {
-    console.error(error)
+    console.error(error);
     return res.status(500).json({
       success: false,
-      message: `Error During fetch order`,
-    })
+      message: "Error during fetch order",
+    });
   }
-}
+};
+
+
+
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { orderStatus } = req.body;
+
+    if (!orderStatus) {
+      return res.status(400).json({
+        success: false,
+        message: "orderStatus is required",
+      });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      id,
+      { orderStatus },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Order status updated successfully",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+
+
+const getOrdersByUserId = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await Order.find({ user: userId })
+      .populate("orderItems.product")
+      .populate("user"); // optional
+
+    return res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.error("Error fetching user's orders:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch user orders",
+    });
+  }
+};
 
 
 
 module.exports = {
-    capturePayment,
+  capturePayment,
   paymentVerification,
   createOrder,
-  getAllOrder
+  getAllOrder,
+  updateOrderStatus,
+  getOrdersByUserId
 };
