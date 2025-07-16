@@ -1,12 +1,11 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAdmin } from "@/contexts/AdminContext";
-import { Search, Mail, Phone, Calendar, ShoppingBag, TrendingUp, RefreshCw, UserCheck, UserX } from "lucide-react";
+import { Search, Mail, Phone, Calendar, ShoppingBag, TrendingUp } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -17,30 +16,11 @@ import {
 } from "@/components/ui/table";
 
 const UserManagement = () => {
-  const { users, orders, updateUserStatus, loading, error, refreshData } = useAdmin();
+  const { users, updateUserStatus } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
-  // Calculate user stats from orders
-  const getUserStats = (userId: string) => {
-    const userOrders = orders.filter(order => order.userId === userId);
-    return {
-      orderCount: userOrders.length,
-      totalSpent: userOrders.reduce((sum, order) => sum + order.total, 0)
-    };
-  };
-
-  // Update users with calculated stats
-  const usersWithStats = users.map(user => {
-    const stats = getUserStats(user.id);
-    return {
-      ...user,
-      orderCount: stats.orderCount,
-      totalSpent: stats.totalSpent
-    };
-  });
-
-  const filteredUsers = usersWithStats.filter(user => {
+  const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
@@ -61,45 +41,16 @@ const UserManagement = () => {
     });
   };
 
-  const totalUsers = usersWithStats.length;
-  const activeUsers = usersWithStats.filter(u => u.status === 'active').length;
-  const totalRevenue = usersWithStats.reduce((sum, user) => sum + user.totalSpent, 0);
-  const totalOrders = usersWithStats.reduce((sum, user) => sum + user.orderCount, 0);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="flex items-center space-x-2">
-          <RefreshCw className="h-6 w-6 animate-spin text-sage" />
-          <span className="text-lg text-muted-foreground">Loading users...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
-        <div className="text-red-600 text-lg">{error}</div>
-        <Button onClick={refreshData} variant="outline">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Retry
-        </Button>
-      </div>
-    );
-  }
+  const totalUsers = users.length;
+  const activeUsers = users.filter(u => u.status === 'active').length;
+  const totalRevenue = users.reduce((sum, user) => sum + user.totalSpent, 0);
+  const totalOrders = users.reduce((sum, user) => sum + user.orderCount, 0);
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">User Management</h1>
-          <p className="text-muted-foreground">Manage and monitor customer accounts</p>
-        </div>
-        <Button onClick={refreshData} variant="outline">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh
-        </Button>
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">User Management</h1>
+        <p className="text-muted-foreground">Manage and monitor customer accounts</p>
       </div>
 
       {/* Stats Cards */}
@@ -123,7 +74,7 @@ const UserManagement = () => {
                 <p className="text-sm text-muted-foreground">Active Users</p>
                 <p className="text-2xl font-bold text-foreground">{activeUsers}</p>
               </div>
-              <UserCheck className="h-8 w-8 text-green-600" />
+              <Badge className="bg-green-100 text-green-800">Active</Badge>
             </div>
           </CardContent>
         </Card>
@@ -210,7 +161,7 @@ const UserManagement = () => {
                     <TableCell>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Phone className="h-3 w-3" />
-                        {user.phone || 'N/A'}
+                        {user.phone}
                       </p>
                     </TableCell>
                     <TableCell>
@@ -255,7 +206,7 @@ const UserManagement = () => {
 
           {filteredUsers.length === 0 && (
             <div className="text-center py-12">
-              <UserX className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-2">No users found</h3>
               <p className="text-muted-foreground">
                 {searchTerm ? 'Try adjusting your search criteria.' : 'No users have registered yet.'}
