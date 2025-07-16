@@ -1,225 +1,164 @@
-
-import { toast } from "react-toastify"
-import { apiConnector } from "../apiConnector"
-import { paymentEndpoints } from "../apis"
-import { order } from "../apis"
-import rzpLogo from "/logo.jpeg"
+import { apiConnector } from "../apiConnector";
+import { paymentEndpoints, order } from "../apis";
+import { resetCart } from "../../redux/authSlice";
+import toast from "react-hot-toast";
 
 const {
   PRODUCT_PAYMENT_API,
   PRODUCT_VERIFY_API,
-
-} = paymentEndpoints
-const {
+  SEND_PAYMENT_SUCCESS_EMAIL_API,
   GET_ALL_ORDER,
+} = paymentEndpoints;
+
+const {
   UPDATE_ORDER_STATUS,
-  GET_ORDER_FOR_USER
-} = order
+  GET_ORDER_FOR_USER,
+} = order;
 
+async function capturePayment(dispatch, token, products, userDetails, navigate) {
+  const toastId = toast.loading("Loading...");
+  dispatch(setLoading(true));
+  try {
+    const response = await apiConnector("POST", PRODUCT_PAYMENT_API, {
+      products,
+      amount: products.reduce((acc, product) => acc + product.price * product.quantity, 0),
+    }, {
+      Authorization: `Bearer ${token}`,
+    });
 
-// Load the Razorpay SDK from the CDN
-function loadScript(src) {
-  return new Promise((resolve) => {
-    const script = document.createElement("script")
-    script.src = src
-    script.onload = () => {
-      resolve(true)
+    if (!response.data.success) {
+      throw new Error(response.data.message);
     }
-    script.onerror = () => {
-      resolve(false)
-    }
-    document.body.appendChild(script)
-  })
+
+    const {
+      token: orderToken,
+    } = response.data;
+    console.log("ORDER TOKEN : ", orderToken);
+
+    // Move to placement order page
+    navigate("/dashboard/enrolled-courses");
+    toast.success("Payment Successful");
+  } catch (error) {
+    console.log("PRODUCT PAYMENT API ERROR............", error);
+    console.log(products)
+    toast.error("Could Not Make Payment");
+    navigate("/cart");
+  }
+  dispatch(setLoading(false));
+  toast.dismiss(toastId);
 }
 
-
-
-
-// Buy Product
-
-export async function BuyProduct(
-  token,
-  products,
-  address,
-  payable,
-  navigate,
-  dispatch
-) {
-  const toastId = toast.loading("Loading...")
+async function verifyPayment(dispatch, token, navigate, orderToken) {
+  const toastId = toast.loading("Verifying Payment....");
+  dispatch(setLoading(true));
   try {
-    // Loading the script of Razorpay SDK
-    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js")
+    const response = await apiConnector("POST", PRODUCT_VERIFY_API, {
+      orderToken,
+    }, {
+      Authorization: `Bearer ${token}`,
+    });
 
-    if (!res) {
-      toast.error(
-        "Razorpay SDK failed to load. Check your Internet Connection."
-      )
-      return
+    if (!response.data.success) {
+      throw new Error(response.data.message);
     }
 
-    // Initiating the Order in Backend
-    const orderResponse = await apiConnector(
-      "POST",
-      PRODUCT_PAYMENT_API,
-      {
-        products,
-        payable
-      },
+    toast.success("Payment Verified, you are redirected to course dashboard");
+    dispatch(resetCart());
+    navigate("/dashboard/enrolled-courses");
+  } catch (error) {
+    console.log("PRODUCT PAYMENT API ERROR............", error);
+    toast.error("Could Not Verify Payment");
+  }
+  dispatch(setLoading(false));
+  toast.dismiss(toastId);
+}
+
+async function sendPaymentSuccessEmail(dispatch, token, orderId, navigate) {
+  try {
+    const response = await apiConnector("POST", SEND_PAYMENT_SUCCESS_EMAIL_API, {
+      orderId,
+    }, {
+      Authorization: `Bearer ${token}`,
+    });
+
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
+
+    toast.success("Payment Verified, you are redirected to course dashboard");
+  } catch (error) {
+    console.log("PRODUCT SEND PAYMENT SUCCESS EMAIL API ERROR............", error);
+    toast.error("Could Not Send Payment Success Email");
+  }
+}
+
+export const getAllOrderAPI = async (token) => {
+  const toastId = toast.loading("Loading Orders...");
+  try {
+    const response = await apiConnector("GET", GET_ALL_ORDER, null, {
+      Authorization: `Bearer ${token}`,
+    });
+
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message);
+    }
+
+    toast.success("Orders Loaded Successfully");
+    return response.data.orders;
+  } catch (error) {
+    console.log("GET_ALL_ORDER_API ERROR............", error);
+    toast.error("Could Not Load Orders");
+    return [];
+  } finally {
+    toast.dismiss(toastId);
+  }
+};
+
+export const updateOrderStatusAPI = async (orderId, status, token) => {
+  const toastId = toast.loading("Updating Order Status...");
+  try {
+    const response = await apiConnector(
+      "PUT", 
+      `${UPDATE_ORDER_STATUS}/${orderId}`, 
+      { orderStatus: status }, 
       {
         Authorization: `Bearer ${token}`,
       }
-    )
-
-    if (!orderResponse.data.success) {
-      throw new Error(orderResponse.data.message)
-    }
-    //   console.log("PAYMENT RESPONSE FROM BACKEND............", orderResponse.data)
-    // Opening the Razorpay SDK
-    const options = {
-      // key: process.env.RAZORPAY_KEY,
-      key: "rzp_test_lQz64anllWjB83",
-
-      currency: orderResponse.data.data.currency,
-      amount: `${orderResponse.data.data.amount}`,
-      order_id: orderResponse.data.data.id,
-      name: "NK Enterprises",
-      description: "Thank you for Purchasing the Products.",
-      image: rzpLogo,
-      // prefill: {
-      //   name: `${user_details.name} `,
-      //   email: user_details.email,
-      // },
-      handler: function (response) {
-        //   sendPaymentSuccessEmail(response, orderResponse.data.data.amount, token)
-        verifyPayment({ ...response, products, address, payable }, token, navigate, dispatch)
-      },
-    }
-    const paymentObject = new window.Razorpay(options)
-
-    paymentObject.open()
-    paymentObject.on("payment.failed", function (response) {
-      toast.error("Oops! Payment Failed.")
-      console.log(response.error)
-    })
-  } catch (error) {
-    console.log("PAYMENT API ERROR............", error)
-    toast.error("Could Not make Payment.")
-  }
-  toast.dismiss(toastId)
-}
-
-
-// Verify the Payment
-async function verifyPayment(bodyData, token, navigate, dispatch) {
-  const toastId = toast.loading("Verifying Payment...")
-  console.log("enter verify")
-  // dispatch(setPaymentLoading(true))
-  try {
-    const response = await apiConnector("POST", PRODUCT_VERIFY_API, bodyData, {
-      Authorization: `Bearer ${token}`,
-    })
-
-    console.log("VERIFY PAYMENT RESPONSE FROM BACKEND............", response)
-
-    if (!response.data.success) {
-      throw new Error(response.data.message)
-    }
-
-    toast.success("Payment Successful. Order Placed ")
-
-    navigate("/")
-
-
-  } catch (error) {
-    console.log("PAYMENT VERIFY ERROR............", error)
-    toast.error("Could Not Verify Payment.")
-  }
-  toast.dismiss(toastId)
-  // dispatch(setPaymentLoading(false))
-}
-
-
-
-
-
-
-
-
-export const getAllOrder = async (token) => {
-  const toastId = toast.loading("Loading...");
-
-  try {
-    const response = await apiConnector("GET", GET_ALL_ORDER, null, {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    });
-
-    console.log(response);
+    );
 
     if (!response?.data?.success) {
-      throw new Error("Could Not Fetch Orders");
+      throw new Error(response?.data?.message);
     }
 
-    const result = response.data.orders;
-    toast.dismiss(toastId);
-    return result;
+    toast.success("Order Status Updated Successfully");
+    return response.data.order;
   } catch (error) {
-    console.log("GET_ALL_ORDER_API ERROR:", error);
-    toast.error(error.message || "Something went wrong");
+    console.log("UPDATE_ORDER_STATUS_API ERROR............", error);
+    toast.error("Could Not Update Order Status");
+    throw error;
+  } finally {
     toast.dismiss(toastId);
-    return [];
   }
 };
-export const getUserOrderApi = async (userId, token) => {
-  const toastId = toast.loading("Loading...");
 
+export const getUserOrderApi = async (userId, token) => {
+  const toastId = toast.loading("Loading User Orders...");
   try {
     const response = await apiConnector("GET", `${GET_ORDER_FOR_USER}/${userId}`, null, {
-      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
     });
 
-    console.log(response);
-
     if (!response?.data?.success) {
-      throw new Error("Could Not Fetch Orders");
+      throw new Error(response?.data?.message);
     }
 
-    const result = response.data.orders;
-    toast.dismiss(toastId);
-    return result;
+    toast.success("User Orders Loaded Successfully");
+    return response.data.orders;
   } catch (error) {
-    console.log("GET_ALL_ORDER_API ERROR:", error);
-    toast.error(error.message || "Something went wrong");
-    toast.dismiss(toastId);
+    console.log("GET_USER_ORDER_API ERROR............", error);
+    toast.error("Could Not Load User Orders");
     return [];
-  }
-};
-
-
-export const updateOrderStatusApi = async (id, orderStatus, token) => {
-  const toastId = toast.loading("Loading...");
-
-  try {
-    const response = await apiConnector("PUT", `${UPDATE_ORDER_STATUS}/${id}`, { orderStatus }, {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    });
-
-    console.log(response);
-
-    if (!response?.data?.success) {
-      throw new Error("Could Not Fetch Orders");
-    }
-    toast.success(response?.data?.message)
-
-    const result = response.data.order;
+  } finally {
     toast.dismiss(toastId);
-    return result;
-  } catch (error) {
-    console.log("update order ERROR:", error);
-    toast.error(error.message || "Something went wrong");
-    toast.dismiss(toastId);
-    return [];
   }
 };

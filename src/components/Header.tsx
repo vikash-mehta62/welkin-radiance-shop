@@ -1,165 +1,205 @@
 
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Button } from '@/components/ui/button';
-import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
-import { useAdmin } from '@/contexts/AdminContext';
-import { RootState } from '@/redux/store';
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { useCart } from "@/contexts/CartContext";
+import { useAdmin } from "@/contexts/AdminContext";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-import { categories } from '@/pages/admin/ProductForm';
-
+  Search,
+  ShoppingCart,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+} from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/redux/store";
+import { logout } from "@/redux/authSlice";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
-  const { items } = useCart(); // Use 'items' instead of 'cart'
-  const { products } = useAdmin(); // Use 'products' to extract categories
+  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { items } = useCart();
+  const { categories, loading } = useAdmin();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authData = useSelector((state: RootState) => state.auth);
+  const isAuthenticated = authData?.token ? true : false;
 
-  // Get user from Redux store
-  const { user } = useSelector((state: RootState) => state.auth);
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
-
-  const allCategories = categories
-
-  const handleCategoryClick = (categoryId: string) => {
-    navigate(`/products?category=${categoryId}`);
-    setIsProductsDropdownOpen(false);
-    setIsMenuOpen(false);
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+    }
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
+
+  const handleCategoryClick = (category: string) => {
+    navigate(`/products?category=${encodeURIComponent(category)}`);
+    setIsProductDropdownOpen(false);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.product-dropdown')) {
+        setIsProductDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-50">
+    <header className="bg-background border-b border-sage-light/30 sticky top-0 z-50 backdrop-blur-sm bg-background/95">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">W</span>
+            <div className="w-8 h-8 bg-sage rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">W</span>
             </div>
-            <span className="text-xl font-bold text-foreground">Welkin</span>
+            <span className="text-xl font-bold text-foreground">
+              Welkin Radiance
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-foreground hover:text-primary transition-colors">
+            <Link
+              to="/"
+              className="text-muted-foreground hover:text-sage transition-colors"
+            >
               Home
             </Link>
-
-            {/* Products Dropdown */}
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuTrigger className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname.startsWith('/products')
-                    ? "text-primary border-b-2 border-primary pb-1"
-                    : "text-muted-foreground"
-                    }`}>
-                    Products
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
-                      <div className="row-span-3">
-                        <NavigationMenuLink asChild>
-                          <Link
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                            to="/products"
+            
+            {/* Products with Dropdown */}
+            <div 
+              className="relative product-dropdown"
+              onMouseEnter={() => setIsProductDropdownOpen(true)}
+              onMouseLeave={() => setIsProductDropdownOpen(false)}
+            >
+              <button className="flex items-center space-x-1 text-muted-foreground hover:text-sage transition-colors">
+                <span>Products</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              
+              {isProductDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-64 bg-background border border-sage-light/30 rounded-lg shadow-elegant p-4 z-50">
+                  <div className="space-y-2">
+                    <Link
+                      to="/products"
+                      className="block px-3 py-2 text-sm text-muted-foreground hover:text-sage hover:bg-sage-light/10 rounded-md transition-colors"
+                      onClick={() => setIsProductDropdownOpen(false)}
+                    >
+                      All Products
+                    </Link>
+                    
+                    {!loading && categories.length > 0 && (
+                      <>
+                        <div className="border-t border-sage-light/20 my-2"></div>
+                        <div className="text-xs font-medium text-muted-foreground px-3 py-1">
+                          Categories
+                        </div>
+                        {categories.map((category) => (
+                          <button
+                            key={category}
+                            onClick={() => handleCategoryClick(category)}
+                            className="block w-full text-left px-3 py-2 text-sm text-muted-foreground hover:text-sage hover:bg-sage-light/10 rounded-md transition-colors"
                           >
-                            <div className="mb-2 mt-4 text-lg font-medium">
-                              All Products
-                            </div>
-                            <p className="text-sm leading-tight text-muted-foreground">
-                              Explore our complete range of premium skincare products
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                      <div className="grid gap-2">
-                        <div className="text-sm font-medium text-muted-foreground mb-2">Categories</div>
-                        {allCategories.slice(0, 6).map((category) => (
-                          <NavigationMenuLink key={category} asChild>
-                            <Link
-                              to={`/products?category=${encodeURIComponent(category)}`}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              <div className="text-sm font-medium leading-none">{category}</div>
-                            </Link>
-                          </NavigationMenuLink>
+                            {category}
+                          </button>
                         ))}
-                        {allCategories.length > 6 && (
-                          <NavigationMenuLink asChild>
-                            <Link
-                              to="/products"
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-primary"
-                            >
-                              <div className="text-sm font-medium leading-none">View All Categories</div>
-                            </Link>
-                          </NavigationMenuLink>
-                        )}
-                      </div>
-                    </div>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
 
-            <Link to="/about" className="text-foreground hover:text-primary transition-colors">
+            <Link
+              to="/about"
+              className="text-muted-foreground hover:text-sage transition-colors"
+            >
               About
             </Link>
           </nav>
 
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-4">
-            {user ? (
-              <>
+          {/* Search Bar */}
+          <div className="hidden lg:flex flex-1 max-w-md mx-8">
+            <form onSubmit={handleSearch} className="w-full relative">
+              <Input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4 w-full border-sage-light/50 focus:border-sage"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </form>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center space-x-4">
+            {/* Cart */}
+            <Link to="/cart" className="relative">
+              <Button variant="ghost" size="sm" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-sage text-white">
+                    {totalItems}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
+
+            {/* User Menu */}
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-2">
                 <Link to="/profile">
                   <Button variant="ghost" size="sm">
-                    <User className="h-4 w-4 mr-2" />
-                    {user.name || 'Profile'}
+                    <User className="h-5 w-5 mr-2" />
+                    Profile
                   </Button>
                 </Link>
-              </>
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
             ) : (
-              <>
+              <div className="flex items-center space-x-2">
                 <Link to="/login">
                   <Button variant="ghost" size="sm">
                     Login
                   </Button>
                 </Link>
                 <Link to="/signup">
-                  <Button variant="hero" size="sm">
+                  <Button variant="luxury" size="sm">
                     Sign Up
                   </Button>
                 </Link>
-              </>
+              </div>
             )}
 
-            <Link to="/cart" className="relative">
-              <Button variant="ghost" size="sm">
-                <ShoppingCart className="h-4 w-4" />
-                {cartItemsCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                    {cartItemsCount}
-                  </span>
-                )}
-              </Button>
-            </Link>
-          </div>
-
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+            {/* Mobile Menu Toggle */}
             <Button
               variant="ghost"
               size="sm"
+              className="md:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -167,122 +207,62 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-border">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="md:hidden border-t border-sage-light/30 py-4">
+            <nav className="flex flex-col space-y-4">
               <Link
                 to="/"
-                className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
+                className="text-muted-foreground hover:text-sage transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
-
-
-
-
-              {/* Mobile Products Section */}
-              <div className="space-y-2">
-                <button
-                  className="flex items-center justify-between w-full px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                  onClick={() => setIsProductsDropdownOpen(!isProductsDropdownOpen)}
-                >
-                  <span>Products</span>
-                  <ChevronDown
-                    className={`h-4 w-4 transition-transform ${isProductsDropdownOpen ? 'rotate-180' : ''
-                      }`}
-                  />
-                </button>
-                {isProductsDropdownOpen && (
-                  <div className="pl-4 space-y-2">
-                    <Link
-                      to="/products"
-                      className="block text-sm text-muted-foreground hover:text-primary transition-colors"
+              <Link
+                to="/products"
+                className="text-muted-foreground hover:text-sage transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Products
+              </Link>
+              
+              {!loading && categories.length > 0 && (
+                <div className="ml-4 space-y-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category}
                       onClick={() => {
+                        handleCategoryClick(category);
                         setIsMenuOpen(false);
-                        setIsProductsDropdownOpen(false);
                       }}
+                      className="block text-left text-sm text-muted-foreground hover:text-sage transition-colors"
                     >
-                      All Products
-                    </Link>
-                    <div className="text-sm font-medium text-muted-foreground mt-2">Categories:</div>
-                    {allCategories.slice(0, 4).map((category) => (
-                      <Link
-                        key={category}
-                        to={`/products?category=${encodeURIComponent(category)}`}
-                        className="block text-sm text-muted-foreground hover:text-primary transition-colors"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsProductsDropdownOpen(false);
-                        }}
-                      >
-                        {category}
-                      </Link>
-                    ))}
-                    {allCategories.length > 4 && (
-                      <Link
-                        to="/products"
-                        className="block text-sm text-primary hover:text-primary/90 transition-colors"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          setIsProductsDropdownOpen(false);
-                        }}
-                      >
-                        View All Categories
-                      </Link>
-                    )}
-                  </div>
-                )}
-              </div>
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              )}
+              
               <Link
                 to="/about"
-                className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
+                className="text-muted-foreground hover:text-sage transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
 
-              {/* Mobile Auth Links */}
-              <div className="pt-4 space-y-2">
-                {user ? (
-                  <Link
-                    to="/profile"
-                    className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <User className="h-4 w-4 mr-2 inline" />
-                    {user.name || 'Profile'}
-                  </Link>
-                ) : (
-                  <>
-                    <Link
-                      to="/login"
-                      className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      to="/signup"
-                      className="block px-3 py-2 text-base font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-md"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
-
-                <Link
-                  to="/cart"
-                  className="flex items-center px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Cart {cartItemsCount > 0 && `(${cartItemsCount})`}
-                </Link>
-              </div>
-            </div>
+              {/* Mobile Search */}
+              <form onSubmit={handleSearch} className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 pr-4 w-full border-sage-light/50 focus:border-sage"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </form>
+            </nav>
           </div>
         )}
       </div>

@@ -1,16 +1,47 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdmin } from "@/contexts/AdminContext";
-import { Package, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Package, ShoppingCart, Users, TrendingUp, ArrowUpRight, ArrowDownRight, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const AdminDashboard = () => {
-  const { products, orders, users } = useAdmin();
+  const { products, orders, users, loading, error, refreshData } = useAdmin();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center space-x-2">
+          <RefreshCw className="h-6 w-6 animate-spin text-sage" />
+          <span className="text-lg text-muted-foreground">Loading dashboard...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+        <div className="text-red-600 text-lg">{error}</div>
+        <Button onClick={refreshData} variant="outline">
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Retry
+        </Button>
+      </div>
+    );
+  }
 
   const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
   const pendingOrders = orders.filter(order => order.status === 'pending').length;
+  const processingOrders = orders.filter(order => order.status === 'processing').length;
   const activeUsers = users.filter(user => user.status === 'active').length;
+  const deliveredOrders = orders.filter(order => order.status === 'delivered').length;
+
+  // Calculate trends (mock percentage for now)
+  const getRandomTrend = () => ({
+    value: Math.floor(Math.random() * 30) + 5,
+    isPositive: Math.random() > 0.3
+  });
 
   const stats = [
     {
@@ -20,8 +51,7 @@ const AdminDashboard = () => {
       color: "text-sage-dark",
       bgColor: "bg-sage-light/30",
       borderColor: "border-sage-light",
-      change: "+12%",
-      trending: "up"
+      trend: getRandomTrend()
     },
     {
       title: "Total Orders",
@@ -30,8 +60,7 @@ const AdminDashboard = () => {
       color: "text-green-700",
       bgColor: "bg-green-50",
       borderColor: "border-green-200",
-      change: "+23%",
-      trending: "up"
+      trend: getRandomTrend()
     },
     {
       title: "Active Users",
@@ -40,8 +69,7 @@ const AdminDashboard = () => {
       color: "text-blue-700",
       bgColor: "bg-blue-50",
       borderColor: "border-blue-200",
-      change: "+8%",
-      trending: "up"
+      trend: getRandomTrend()
     },
     {
       title: "Total Revenue",
@@ -50,12 +78,13 @@ const AdminDashboard = () => {
       color: "text-purple-700",
       bgColor: "bg-purple-50",
       borderColor: "border-purple-200",
-      change: "+15%",
-      trending: "up"
+      trend: getRandomTrend()
     }
   ];
 
-  const recentOrders = orders.slice(0, 5);
+  const recentOrders = orders
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
 
   return (
     <div className="space-y-8 p-6">
@@ -66,6 +95,10 @@ const AdminDashboard = () => {
           <p className="text-lg text-muted-foreground">Welcome back! Here's what's happening with your store.</p>
         </div>
         <div className="flex space-x-3">
+          <Button onClick={refreshData} variant="outline" size="lg">
+            <RefreshCw className="h-5 w-5 mr-2" />
+            Refresh
+          </Button>
           <Link to="/admin/products/create">
             <Button variant="luxury" size="lg" className="shadow-lg hover:shadow-xl transition-all duration-300">
               <Package className="h-5 w-5 mr-2" />
@@ -90,19 +123,64 @@ const AdminDashboard = () => {
             <CardContent className="pt-0">
               <div className="text-3xl font-bold text-foreground mb-2">{stat.value}</div>
               <div className="flex items-center text-sm">
-                {stat.trending === "up" ? (
+                {stat.trend.isPositive ? (
                   <ArrowUpRight className="h-4 w-4 text-green-600 mr-1" />
                 ) : (
                   <ArrowDownRight className="h-4 w-4 text-red-600 mr-1" />
                 )}
-                <span className={`font-medium ${stat.trending === "up" ? "text-green-600" : "text-red-600"}`}>
-                  {stat.change}
+                <span className={`font-medium ${stat.trend.isPositive ? "text-green-600" : "text-red-600"}`}>
+                  {stat.trend.isPositive ? '+' : '-'}{stat.trend.value}%
                 </span>
                 <span className="text-muted-foreground ml-1">from last month</span>
               </div>
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Additional Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="border-orange-200 border-2">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Pending Orders</p>
+                <p className="text-2xl font-bold text-orange-600">{pendingOrders}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-orange-50 border border-orange-200">
+                <ShoppingCart className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-blue-200 border-2">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Processing Orders</p>
+                <p className="text-2xl font-bold text-blue-600">{processingOrders}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-200">
+                <Package className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-green-200 border-2">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Delivered Orders</p>
+                <p className="text-2xl font-bold text-green-600">{deliveredOrders}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-green-50 border border-green-200">
+                <TrendingUp className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Recent Orders and Quick Actions */}
@@ -131,7 +209,7 @@ const AdminDashboard = () => {
                           <ShoppingCart className="h-5 w-5 text-white" />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground">#{order.id}</p>
+                          <p className="font-semibold text-foreground">#{order.id.slice(-8)}</p>
                           <p className="text-sm text-muted-foreground">{order.customerName}</p>
                         </div>
                       </div>
