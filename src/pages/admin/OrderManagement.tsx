@@ -51,6 +51,8 @@ const OrderManagement = () => {
       ? orders
       : orders.filter((order) => order?.orderStatus === statusFilter);
 
+
+      console.log(filteredOrders)
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "delivered":
@@ -265,12 +267,11 @@ const OrderManagement = () => {
                                   Quantity: {item?.quantity}
                                 </p>
                               </div>
-                              <p className="font-semibold">
-                                ₹
-                                {(
-                                  item?.product?.sellingPrice * item?.quantity
-                                ).toLocaleString()}
-                              </p>
+                             <p className="font-semibold">
+  ₹
+  {(Number(item?.product?.sellingPrice) * Number(item?.quantity)).toLocaleString()}
+</p>
+
                             </div>
                           ))}
                         </div>

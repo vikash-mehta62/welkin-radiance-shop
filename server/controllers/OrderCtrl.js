@@ -217,9 +217,12 @@ const createOrder = asyncHandler(async (products, userId, address, razorpay_orde
 
 const getAllOrder = async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate("user")
-      .populate("orderItems.product"); // <- populate nested product in orderItems
+  const orders = await Order.find()
+  .populate("user")
+  .populate({
+    path: "orderItems.product",
+    model: "Product", // explicitly specify model if needed
+  });
 
     return res.status(200).json({
       success: true,
