@@ -217,23 +217,18 @@ const createOrder = asyncHandler(async (products, userId, address, razorpay_orde
 
 const getAllOrder = async (req, res) => {
   try {
-  const orders = await Order.find()
-  .populate("user")
-  .populate({
-    path: "orderItems.product",
-    model: "Product", // explicitly specify model if needed
-  });
+    const orders = await Order.find()
+      .sort({ createdAt: -1 }) // sort by latest
+      .populate("user")
+      .populate({
+        path: "orderItems.product",
+        model: "Product",
+      });
 
-    return res.status(200).json({
-      success: true,
-      orders,
-    });
+    res.status(200).json({ success: true, orders });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Error during fetch order",
-    });
+    res.status(500).json({ success: false, message: "Error during fetch order" });
   }
 };
 

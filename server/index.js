@@ -39,6 +39,7 @@ app.use("/api/v1/auth", require("./routes/authRoute"));
 app.use("/api/v1/image", require("./routes/imageRoute"));
 app.use("/api/v1/product", require("./routes/productRoute"));
 app.use("/api/v1/order", require("./routes/orderRoute"));
+app.use("/api/v1/dashboard", require("./routes/dashboardRoute"));
 
 app.get("/", (req, res) => {
   return res.json({

@@ -1,6 +1,6 @@
 
-// const BASE_URL = "http://localhost:4000/api/v1"
-const BASE_URL = "https://welkin-radiance-shop.onrender.com/api/v1"
+const BASE_URL = "http://localhost:4000/api/v1"
+// const BASE_URL = "https://welkin-radiance-shop.onrender.com/api/v1"
 // const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
 export const endpoints = {
@@ -118,6 +118,9 @@ export const task = {
 }
 export const image = {
   IMAGE_UPLOAD: BASE_URL + "/image/multi",
+}
+export const dashboard = {
+  GET_DASHBOARD_DATA: BASE_URL + "/dashboard/getAll",
 }
 export const store = {
   STORE_DASHBOARD: BASE_URL + "/store/dashboard",
