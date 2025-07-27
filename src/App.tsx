@@ -20,6 +20,10 @@ import OrderManagement from "@/pages/admin/OrderManagement";
 import UserManagement from "@/pages/admin/UserManagement";
 import NotFound from "./pages/NotFound";
 import { fetchMyProfile } from "@/services2/operations/auth";
+import Contact from "@/pages/Contact";
+import ShippingInfo from "@/pages/ShippingInfo";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsOfService from "@/pages/TermsOfService";
 
 // AUTH
 import PrivateRoute from "@/components/auth/PrivateRoute";
@@ -73,6 +77,10 @@ const App = () => {
                     <Route path="/products" element={<Products />} />
                     <Route path="/products/:slug" element={<Product />} />
                     <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/shipping" element={<ShippingInfo />} />
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
                     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
