@@ -19,7 +19,7 @@ import {
   updateProductAPI
 } from "@/services2/operations/product"
 
-export const categories = ['Anti-Aging', 'Acne Care', 'Dry Skin', 'Oily Skin', 'Sensitive Skin', 'Glow Boost', 'Hydrating'];
+export const categories = ['Anti-Aging', 'Acne Care', 'Dry Skin', 'Oily Skin', 'Sensitive Skin', 'Glow Boost', 'Hydrating', "Hyperpigmentation" ,"Brightness Skin" , "Anti Wrinkle", "Natural Antioxidant"];
 
 const ProductForm = () => {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const ProductForm = () => {
     faqs: []
   });
 
-  const productTypes = ['Serum', 'Cleanser', 'Moisturizer', 'Toner', 'Sunscreen', 'Face Mask', 'Eye Cream'];
+  const productTypes = ['Serum', 'Cleanser', 'Moisturizer', 'Toner', 'Sunscreen', 'Face Mask', 'Eye Cream',"Cream" ,"Night Cream","Oral Sun Protection", "Get The Glow"];
 
   const quillModules = {
     toolbar: [
@@ -229,7 +229,7 @@ console.log(formData)
       });
     }
 
-    navigate('/admin/products');
+    // navigate('/admin/products');
   };
 
   return (
@@ -389,7 +389,7 @@ console.log(formData)
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <Label htmlFor="keyBenefits" className="mb-2 block">Key Benefits</Label>
+              <Label htmlFor="keyBenefits" className="mb-2 block">Product Description</Label>
               <div style={{ minHeight: '150px' }}>
                 <ReactQuill
                   theme="snow"
@@ -404,7 +404,7 @@ console.log(formData)
             </div>
 
             <div>
-              <Label htmlFor="description" className="mb-2 block">Description</Label>
+              <Label htmlFor="description" className="mb-2 block">Key Benefits</Label>
               <div style={{ minHeight: '150px' }}>
                 <ReactQuill
                   theme="snow"
@@ -419,7 +419,7 @@ console.log(formData)
             </div>
 
             <div>
-              <Label htmlFor="skinSuitability" className="mb-2 block">Skin Suitability</Label>
+              <Label htmlFor="skinSuitability" className="mb-2 block">Recommended for</Label>
               <div style={{ minHeight: '120px' }}>
                 <ReactQuill
                   theme="snow"

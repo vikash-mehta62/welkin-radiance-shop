@@ -47,7 +47,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       : 0;
 
   return (
-    <Link to={`/product/${product.slug}`}>
+    <Link to={`/products/${product.slug}`}>
       <Card className="h-full flex flex-col hover:shadow-lg transition-shadow duration-200 ease-in-out">
         <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <img
@@ -335,9 +335,7 @@ export default function ProductPage() {
             {product.keyBenefits && (
               <Card className="border-0 shadow-md bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
                 <CardContent className="p-3 lg:p-4">
-                  <h3 className="text-sm lg:text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
-                    Key Benefits
-                  </h3>
+           
                   <div
                     className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed [&>ul]:space-y-1 [&>ul>li]:text-xs [&>ul>li]:lg:text-sm [&>ul>li]:leading-snug"
                     dangerouslySetInnerHTML={{ __html: product.keyBenefits }}
@@ -423,7 +421,7 @@ export default function ProductPage() {
                 className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden"
               >
                 <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                  Description
+                  Key Benefits
                 </AccordionTrigger>
                 <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4">
                   <div
@@ -440,7 +438,7 @@ export default function ProductPage() {
                 className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden"
               >
                 <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                  Skin Suitability
+                 Recommended for
                 </AccordionTrigger>
                 <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4">
                   <div

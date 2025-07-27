@@ -11,16 +11,29 @@ const Home = () => {
   const { products } = useAdmin();
   
   // Get first 4 products from AdminContext
-  const featuredProducts = products.slice(0, 4).map(product => ({
-    id: product.id!,
-    slug: product.slug,
-    title: product.title,
-    mrp: product.mrp,
-    sellingPrice: product.sellingPrice,
-    mainImage: product.images[0] || productsGrid,
-    hoverImage: product.images[1] || product.images[0] || productsGrid,
-    category: product.type
-  }));
+ const slugOrder = [
+  "derma-gold-intense-glow-cream-30-gm",
+  "derma-white-50-gm",
+  "tablet-uv-shield-1x10-tablets",
+  "g4-max-glow-1x10-capsules"
+];
+
+// Sort products based on the above slug order
+const sortedProducts = slugOrder
+  .map(slug => products.find(p => p.slug === slug))
+  .filter(Boolean); // Removes any `undefined` if slug doesn't match
+
+const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
+  id: product.id!,
+  slug: product.slug,
+  title: product.title,
+  mrp: product.mrp,
+  sellingPrice: product.sellingPrice,
+  mainImage: product.images?.[0] || productsGrid,
+  hoverImage: product.images?.[1] || product.images?.[0] || productsGrid,
+  category: product.type
+}));
+
 
   return (
     <div className="min-h-screen">
@@ -43,19 +56,19 @@ const Home = () => {
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Discover scientifically-formulated skincare that nurtures your skin's natural beauty
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="hero" size="lg" className="text-lg px-8 py-4">
               Shop Now
             </Button>
             <Button variant="minimal" size="lg" className="text-lg px-8 py-4">
               Learn More
             </Button>
-          </div>
+          </div> */}
         </div>
       </section>
 
       {/* Offers Section */}
-      <section className="py-8 bg-gradient-hero">
+      {/* <section className="py-8 bg-gradient-hero">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="border-sage-light bg-background/80 backdrop-blur-sm shadow-card">
@@ -87,7 +100,7 @@ const Home = () => {
             </Card>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Featured Products */}
       <section className="py-16 bg-background">

@@ -79,12 +79,7 @@ const ProductCard = ({
           </Link>
           
           {/* Hover overlay with quick actions */}
-          <div className={`absolute inset-0 bg-sage-dark/20 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
-            <Button variant="hero" size="sm" className="animate-scale-in" onClick={handleQuickAdd}>
-              <ShoppingBag className="h-4 w-4 mr-2" />
-              Quick Add
-            </Button>
-          </div>
+      
         </div>
 
         <div className="p-4 space-y-3">

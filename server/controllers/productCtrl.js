@@ -6,29 +6,19 @@ const productSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1),
   type: z.string().min(1),
-  category: z.array(z.string().min(1)).min(1),
   mrp: z.number().nonnegative(),
   sellingPrice: z.number().nonnegative(),
   images: z.array(z.string().url()).min(1),
-  keyBenefits: z.string().min(1),
-  description: z.string().min(1),
 });
 
 // ✅ Controller
 const createProduct = async (req, res) => {
   try {
     // ✅ Validate input
-    const result = productSchema.safeParse(req.body);
+    const result = req.body;
 
-    if (!result.success) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: result.error.flatten(),
-      });
-    }
 
-    const data = result.data;
+    const data = result;
 
     // ✅ Check if product with slug already exists
     const exists = await Product.findOne({ slug: data.slug });
@@ -59,22 +49,58 @@ const createProduct = async (req, res) => {
 
 
 
+const isEmptyHTML = (html) => {
+  const stripped = html
+    .replace(/<[^>]*>/g, "") // remove all HTML tags
+    .replace(/&nbsp;/g, "") // remove &nbsp;
+    .trim(); // remove spaces/newlines
+
+  return stripped.length === 0;
+};
+
+
+
+
 const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log("🔍 Product ID to update:", id);
 
-    // ✅ Validate incoming body
-    const result = productSchema.safeParse(req.body);
+    // Validate using Zod
+    const result = req.body;
+ 
 
-    if (!result.success) {
-      return res.status(400).json({
-        success: false,
-        message: "Validation failed",
-        errors: result.error.flatten(),
-      });
+    const data = result;
+    console.log("✅ Validated data:", data);
+
+    // ✅ Transform ingredients if it's a string
+    if (typeof data.ingredients === "string" && data.ingredients.trim() !== "") {
+      data.ingredients = data.ingredients
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item) => item.length > 0);
     }
 
-    const data = result.data;
+    // ✅ Function to detect empty HTML
+    const isEmptyHTML = (html) => {
+      const stripped = html
+        .replace(/<[^>]*>/g, "")  // remove tags
+        .replace(/&nbsp;/g, "")  // remove &nbsp;
+        .trim();
+      return stripped.length === 0;
+    };
+
+    // ✅ Prepare $unset for empty fields
+    const fieldsToCheck = ["description", "skinSuitability", "howToUse", "keyBenefits"];
+    const fieldsToUnset = {};
+
+    fieldsToCheck.forEach((field) => {
+      if (data[field] && typeof data[field] === "string" && isEmptyHTML(data[field])) {
+        fieldsToUnset[field] = "";
+        delete data[field];
+        console.log(`⚠️ Empty HTML detected. Marking ${field} for removal.`);
+      }
+    });
 
     // ✅ Check if product exists
     const existingProduct = await Product.findById(id);
@@ -85,7 +111,7 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    // ✅ Check if slug already exists (excluding current product)
+    // ✅ Check slug uniqueness (excluding this product)
     const slugExists = await Product.findOne({ slug: data.slug, _id: { $ne: id } });
     if (slugExists) {
       return res.status(409).json({
@@ -94,8 +120,14 @@ const updateProduct = async (req, res) => {
       });
     }
 
-    // ✅ Update product
-    const updatedProduct = await Product.findByIdAndUpdate(id, data, {
+    // ✅ Final update payload
+    const updatePayload = {
+      ...(Object.keys(data).length > 0 && { $set: data }),
+      ...(Object.keys(fieldsToUnset).length > 0 && { $unset: fieldsToUnset }),
+    };
+
+    // ✅ Update document
+    const updatedProduct = await Product.findByIdAndUpdate(id, updatePayload, {
       new: true,
       runValidators: true,
     });
@@ -106,13 +138,18 @@ const updateProduct = async (req, res) => {
       product: updatedProduct,
     });
   } catch (error) {
-    console.error("Product update error:", error);
+    console.error("❌ Product update error:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error",
     });
   }
 };
+
+
+
+
+
 
 
 
