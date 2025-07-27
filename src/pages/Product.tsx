@@ -1,28 +1,50 @@
-import type React from "react"
-import { useState } from "react"
-import { Link } from "react-router-dom" // Link for related products
+import type React from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom"; // Link for related products
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card" // Added CardTitle, CardDescription
-import { Badge } from "@/components/ui/badge"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Minus, Plus, Star, Heart, Share2, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react"
-import { useParams } from "react-router-dom"
-import { useAdmin } from "@/contexts/AdminContext"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"; // Added CardTitle, CardDescription
+import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Minus,
+  Plus,
+  Star,
+  Heart,
+  Share2,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+} from "lucide-react";
+import { useParams } from "react-router-dom";
+import { useAdmin } from "@/contexts/AdminContext";
 
 // Mock contexts - replace with your actual contexts
 const useCart = () => ({
   addItem: (item: any) => console.log("Added to cart:", item),
-})
+});
 
 // Mock Product Card Component for Related Products (if not already existing)
 interface ProductCardProps {
-  product: any
+  product: any;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const discountPercentage =
-    product.mrp > product.sellingPrice ? Math.round(((product.mrp - product.sellingPrice) / product.mrp) * 100) : 0
+    product.mrp > product.sellingPrice
+      ? Math.round(((product.mrp - product.sellingPrice) / product.mrp) * 100)
+      : 0;
 
   return (
     <Link to={`/product/${product.slug}`}>
@@ -34,7 +56,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="object-cover w-full h-full transform transition-transform duration-300 hover:scale-105"
           />
           {discountPercentage > 0 && (
-            <Badge variant="destructive" className="absolute top-2 left-2 text-xs">
+            <Badge
+              variant="destructive"
+              className="absolute top-2 left-2 text-xs"
+            >
               {discountPercentage}% OFF
             </Badge>
           )}
@@ -63,31 +88,35 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </CardContent>
       </Card>
     </Link>
-  )
-}
+  );
+};
 
 export default function ProductPage() {
-  const { slug } = useParams<{ slug: string }>()
-  const { products } = useAdmin()
-  const product = products.find((p) => p.slug === slug)
-  const { addItem } = useCart()
+  const { slug } = useParams<{ slug: string }>();
+  const { products } = useAdmin();
+  const product = products.find((p) => p.slug === slug);
+  const { addItem } = useCart();
 
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
-  const [quantity, setQuantity] = useState(1)
-  const [isZoomed, setIsZoomed] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
- const relatedProducts = products.filter(
-    (p) => p.id !== product.slug && p.category.some(cat => product.category.includes(cat))
-  ).slice(0, 4); // Get up to 4 related products
-
-
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const relatedProducts = products
+    .filter(
+      (p) =>
+        p.id !== product.slug &&
+        p.category.some((cat) => product.category.includes(cat))
+    )
+    .slice(0, 4); // Get up to 4 related products
 
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Card className="text-center py-12">
           <CardContent>
-            <h1 className="text-xl font-bold text-foreground mb-4">Product Not Found</h1>
+            <h1 className="text-xl font-bold text-foreground mb-4">
+              Product Not Found
+            </h1>
             <p className="text-sm text-muted-foreground mb-6">
               The product you're looking for doesn't exist or has been removed.
             </p>
@@ -97,7 +126,7 @@ export default function ProductPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
 
   const handleAddToCart = () => {
@@ -108,37 +137,43 @@ export default function ProductPage() {
         title: product.title,
         price: product.sellingPrice,
         image: product.images[0] || "/placeholder.svg",
-      })
+      });
     }
-  }
+  };
 
   const incrementQuantity = () => {
-    setQuantity(quantity + 1)
-  }
+    setQuantity(quantity + 1);
+  };
 
   const decrementQuantity = () => {
     if (quantity > 1) {
-      setQuantity(quantity - 1)
+      setQuantity(quantity - 1);
     }
-  }
+  };
 
   const nextImage = () => {
-    setSelectedImageIndex((prev) => (prev === product.images.length - 1 ? 0 : prev + 1))
-  }
+    setSelectedImageIndex((prev) =>
+      prev === product.images.length - 1 ? 0 : prev + 1
+    );
+  };
 
   const prevImage = () => {
-    setSelectedImageIndex((prev) => (prev === 0 ? product.images.length - 1 : prev - 1))
-  }
+    setSelectedImageIndex((prev) =>
+      prev === 0 ? product.images.length - 1 : prev - 1
+    );
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    setMousePosition({ x, y })
-  }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePosition({ x, y });
+  };
 
   const discountPercentage =
-    product.mrp > product.sellingPrice ? Math.round(((product.mrp - product.sellingPrice) / product.mrp) * 100) : 0
+    product.mrp > product.sellingPrice
+      ? Math.round(((product.mrp - product.sellingPrice) / product.mrp) * 100)
+      : 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
@@ -149,7 +184,7 @@ export default function ProductPage() {
             {/* Main img with Zoom */}
             <div className="relative group">
               <div
-                className="relative overflow-hidden rounded-lg lg:rounded-xl bg-white shadow-lg lg:shadow-xl aspect-square cursor-zoom-in"
+                className="relative overflow-hidden rounded-lg lg:rounded-xl bg-white shadow-lg lg:shadow-xl aspect-square cursor-zoom-in flex items-center justify-center" // Added flex for centering
                 onMouseEnter={() => setIsZoomed(true)}
                 onMouseLeave={() => setIsZoomed(false)}
                 onMouseMove={handleMouseMove}
@@ -157,7 +192,10 @@ export default function ProductPage() {
                 <img
                   src={product.images[selectedImageIndex] || "/placeholder.svg"}
                   alt={product.title}
-                                  className={`object-cover transition-transform duration-300 ${isZoomed ? "scale-150" : "scale-100"}`}
+                  className={`w-full h-full object-contain transition-transform duration-300 ${
+                    // object-contain for fitting, w-full h-full for fixed size
+                    isZoomed ? "scale-150" : "scale-100"
+                  }`}
                   style={{
                     transformOrigin: `${mousePosition.x}% ${mousePosition.y}%`,
                   }}
@@ -209,7 +247,8 @@ export default function ProductPage() {
                   <button
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
-                    className={`relative flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 rounded-md lg:rounded-lg overflow-hidden transition-all duration-200 ${
+                    className={`relative flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 rounded-md lg:rounded-lg overflow-hidden transition-all duration-200 flex items-center justify-center ${
+                      // Added flex for centering thumbnails
                       selectedImageIndex === index
                         ? "ring-2 ring-blue-500 ring-offset-1 scale-105"
                         : "hover:scale-105 hover:shadow-md"
@@ -218,7 +257,7 @@ export default function ProductPage() {
                     <img
                       src={image || "/placeholder.svg"}
                       alt={`${product.title} ${index + 1}`}
-                         className="object-cover"
+                      className="w-full h-full object-contain" // object-contain for fitting, w-full h-full for fixed size
                     />
                   </button>
                 ))}
@@ -238,7 +277,11 @@ export default function ProductPage() {
                   {product.type}
                 </Badge>
                 {product.category.map((cat) => (
-                  <Badge key={cat} variant="outline" className="border-slate-300 text-xs">
+                  <Badge
+                    key={cat}
+                    variant="outline"
+                    className="border-slate-300 text-xs"
+                  >
                     {cat}
                   </Badge>
                 ))}
@@ -251,10 +294,15 @@ export default function ProductPage() {
               <div className="flex items-center gap-3">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-yellow-400 fill-current" />
+                    <Star
+                      key={i}
+                      className="h-3.5 w-3.5 lg:h-4 lg:w-4 text-yellow-400 fill-current"
+                    />
                   ))}
                 </div>
-                <span className="text-xs lg:text-sm text-slate-600 dark:text-slate-400">(4.8 • 124 reviews)</span>
+                <span className="text-xs lg:text-sm text-slate-600 dark:text-slate-400">
+                  (4.8 • 124 reviews)
+                </span>
               </div>
             </div>
 
@@ -269,7 +317,10 @@ export default function ProductPage() {
                     <span className="text-sm lg:text-base text-slate-500 line-through">
                       ₹{product.mrp.toLocaleString()}
                     </span>
-                    <Badge variant="destructive" className="bg-red-500 text-white text-xs">
+                    <Badge
+                      variant="destructive"
+                      className="bg-red-500 text-white text-xs"
+                    >
                       {discountPercentage}% OFF
                     </Badge>
                   </>
@@ -298,7 +349,9 @@ export default function ProductPage() {
             {/* Quantity and Add to Cart */}
             <div className="space-y-3 lg:space-y-4">
               <div className="flex items-center gap-3 lg:gap-4">
-                <span className="text-sm lg:text-base font-medium text-slate-900 dark:text-slate-100">Quantity:</span>
+                <span className="text-sm lg:text-base font-medium text-slate-900 dark:text-slate-100">
+                  Quantity:
+                </span>
                 <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden">
                   <Button
                     variant="ghost"
@@ -328,14 +381,23 @@ export default function ProductPage() {
                   className="flex-1 h-10 lg:h-11 text-sm lg:text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
                   onClick={handleAddToCart}
                 >
-                  Add to Cart - ₹{(product.sellingPrice * quantity).toLocaleString()}
+                  Add to Cart - ₹
+                  {(product.sellingPrice * quantity).toLocaleString()}
                 </Button>
 
-                <Button variant="outline" size="icon" className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
+                >
                   <Heart className="h-4 w-4 lg:h-5 lg:w-5" />
                 </Button>
 
-                <Button variant="outline" size="icon" className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
+                >
                   <Share2 className="h-4 w-4 lg:h-5 lg:w-5" />
                 </Button>
               </div>
@@ -349,7 +411,12 @@ export default function ProductPage() {
             Product Information
           </h2>
 
-          <Accordion type="single" collapsible defaultValue="description" className="space-y-3">
+          <Accordion
+            type="single"
+            collapsible
+            defaultValue="description"
+            className="space-y-3"
+          >
             {product.description && (
               <AccordionItem
                 value="description"
@@ -378,7 +445,9 @@ export default function ProductPage() {
                 <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4">
                   <div
                     className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: product.skinSuitability }}
+                    dangerouslySetInnerHTML={{
+                      __html: product.skinSuitability,
+                    }}
                   />
                 </AccordionContent>
               </AccordionItem>
@@ -443,10 +512,16 @@ export default function ProductPage() {
                     >
                       {/* Alternating layout: even index = image left, odd index = image right */}
                       <div
-                        className={`grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center ${index % 2 === 1 ? "lg:flex-row-reverse" : ""}`}
+                        className={`grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center ${
+                          index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                        }`}
                       >
                         {/* Content */}
-                        <div className={`space-y-2 lg:space-y-3 ${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}>
+                        <div
+                          className={`space-y-2 lg:space-y-3 ${
+                            index % 2 === 1 ? "lg:order-2" : "lg:order-1"
+                          }`}
+                        >
                           {block.title && (
                             <h4 className="text-base lg:text-lg font-semibold text-slate-900 dark:text-slate-100">
                               {block.title}
@@ -460,12 +535,16 @@ export default function ProductPage() {
 
                         {/* img */}
                         {block.image && (
-                          <div className={`${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}>
+                          <div
+                            className={`${
+                              index % 2 === 1 ? "lg:order-1" : "lg:order-2"
+                            }`}
+                          >
                             <div className="relative w-full h-40 lg:h-48 rounded-lg overflow-hidden shadow-md">
                               <img
                                 src={block.image || "/placeholder.svg"}
                                 alt={block.title}
-                                                                className="object-cover hover:scale-105 transition-transform duration-300"
+                                className="object-cover hover:scale-105 transition-transform duration-300"
                               />
                             </div>
                           </div>
@@ -510,13 +589,13 @@ export default function ProductPage() {
           </Accordion>
         </div>
 
-          {/* Related Products Section: "You might also like" */}
+        {/* Related Products Section: "You might also like" */}
         {relatedProducts.length > 0 && (
           <>
             <hr className="my-12 lg:my-16 border-t border-slate-200 dark:border-slate-700 max-w-7xl mx-auto" />
             <div className="mt-12 lg:mt-16 max-w-7xl mx-auto">
               <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-6 lg:mb-8 text-center">
-               You might also like
+                You might also like
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
                 {relatedProducts.map((p) => (
@@ -528,5 +607,5 @@ export default function ProductPage() {
         )}
       </div>
     </div>
-  )
+  );
 }
