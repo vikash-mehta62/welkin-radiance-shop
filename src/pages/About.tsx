@@ -100,7 +100,7 @@ const About = () => {
             About Welkin
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Welkin Lifesciences is a dermatology-led skincare and wellness brand focused on results you can see and feel.
+            Welkin Pharmaceuticals is a dermatology-led skincare and wellness brand focused on results you can see and feel.
           </p>
         </div>
       </div>
