@@ -22,13 +22,13 @@ const Footer = () => {
     { name: "Admin", href: "/admin" },
   ];
 
-  
+
 
   const categories = [
-    { name: "Derma Gold Intense Glow Cream 30 gm", href: "/products?category=serum" },
-    { name: "Derma White 50 gm", href: "/products?category=moisturizer" },
-    { name: "Tablet UV Shield 1X10 Tablets", href: "/products?category=cleanser" },
-    { name: "G4 Max Glow 1X10 Capsules", href: "/products?category=toner" },
+    { name: "Derma Gold Intense Glow Cream ", href: "/products?category=serum" },
+    { name: "Derma White ", href: "/products?category=moisturizer" },
+    { name: "Tablet UV Shield ", href: "/products?category=cleanser" },
+    { name: "G4 Max Glow ", href: "/products?category=toner" },
 
   ];
 
@@ -39,7 +39,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img src="/logo2.jpg" alt="not found" className="w-32 rounded-xl"/>
+              <img src="/logo2.jpg" alt="not found" className="w-32 rounded-xl" />
               {/* <div className="w-8 h-8 bg-background rounded-full flex items-center justify-center">
                 <span className="text-sage-dark font-bold text-sm">W</span>
               </div>
@@ -83,21 +83,21 @@ const Footer = () => {
           </div>
 
           {/* Categories */}
-         <div className="space-y-4">
-  <h3 className="text-lg font-semibold">Shop By Products</h3>
-  <ul className="space-y-2">
-    {categories.map((category, index) => (
-      <li key={category.name}>
-        <Link
-          to={`/products/${slugOrder[index]}`} // use slugOrder by index
-          className="text-sage-light hover:text-background transition-colors text-sm"
-        >
-          {category.name}
-        </Link>
-      </li>
-    ))}
-  </ul>
-</div>
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Shop By Products</h3>
+            <ul className="space-y-2">
+              {categories.map((category, index) => (
+                <li key={category.name}>
+                  <Link
+                    to={`/products/${slugOrder[index]}`} // use slugOrder by index
+                    className="text-sage-light hover:text-background transition-colors text-sm"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
 
           {/* Contact Info */}
@@ -115,8 +115,9 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-sage-light mt-0.5" />
                 <span className="text-sage-light text-sm">
+                  Welkin Pharmaceuticals <br />
                   19, Hussain Building,<br />
- Ist Floor Old Saifia College Road, Bhopal-462001                </span>
+                  1st Floor , Opp. Modi Medical Stores, Old Saifia College Road Bhopal (MP)  Pin Code - 462001                </span>
               </div>
             </div>
           </div>
@@ -130,9 +131,9 @@ const Footer = () => {
           </div>
           <div className="text-sage-light text-sm">
             Developed and maintained by{" "}
-            <a 
-              href="https://www.mahitechnocrafts.in/" 
-              target="_blank" 
+            <a
+              href="https://www.mahitechnocrafts.in/"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-background hover:text-sage-light transition-colors font-medium"
             >

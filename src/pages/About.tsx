@@ -57,8 +57,7 @@ const team = [
             About Welkin
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We're on a mission to revolutionize skincare with clean, effective, and sustainable products 
-            that honor both your skin and our planet.
+         Welkin Lifesciences is a dermatology-led skincare and wellness brand focused on results you can see and feel.
           </p>
         </div>
       </div>
@@ -90,11 +89,11 @@ const team = [
                 </p>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative ">
               <img
-                src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=600&h=400&fit=crop"
+                src="/derma.jpg"
                 alt="Natural skincare ingredients"
-                className="rounded-lg shadow-elegant"
+                className="rounded-lg shadow-elegant object-fit"
               />
             </div>
           </div>
