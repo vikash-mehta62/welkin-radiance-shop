@@ -17,12 +17,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { categories } from '@/pages/admin/ProductForm';
 
-
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
-  const { items } = useCart(); // Use 'items' instead of 'cart'
-  const { products } = useAdmin(); // Use 'products' to extract categories
+  const { items } = useCart();
+  const { products } = useAdmin();
   const navigate = useNavigate();
 
   // Get user from Redux store
@@ -43,11 +42,15 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">W</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="w-10 h-10 flex items-center justify-center">
+              <img 
+                src="/lovable-uploads/f2fa4fe0-2097-4be2-94df-6a2fc0ec6e1b.png" 
+                alt="Welkin Logo" 
+                className="w-full h-full object-contain"
+              />
             </div>
-            <span className="text-xl font-bold text-foreground">Welkin</span>
+            <span className="text-2xl font-bold text-primary">Welkin</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -178,9 +181,6 @@ const Header = () => {
               >
                 Home
               </Link>
-
-
-
 
               {/* Mobile Products Section */}
               <div className="space-y-2">

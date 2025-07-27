@@ -34,71 +34,34 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
   category: product.type
 }));
 
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
- <section className="relative h-[100vh] w-full overflow-hidden">
-  {/* Background Image */}
-  <div
-    className="absolute inset-0 bg-no-repeat bg-center bg-cover"
-    style={{ backgroundImage: `url(${heroImage})` }}
-  >
-    <div className="absolute "></div> {/* Soft overlay for text contrast */}
-  </div>
-
-
-</section>
-  {/* Text Content at Bottom */}
-  <div className=" w-full z-10 text-center px-4 bg-green-600 py-3">
-    <h1 className="text-3xl md:text-5xl font-bold text-amber-800 drop-shadow">
-      Your Daily Ritual of{" "}
-      <span className="text-gray-300 bg-gradient-to-r from-primary to-sage bg-clip-text text-transparent">
-        Radiance
-      </span>
-    </h1>
-
-    <p className="text-lg md:text-xl text-gray-800 mt-4 drop-shadow max-w-2xl mx-auto">
-      Discover scientifically-formulated skincare that nurtures your skin's natural beauty
-    </p>
-  </div>
-
-<div className="min-h-[1px] min-w-full bg-gray-600 "></div>
-
-      {/* Offers Section */}
-      {/* <section className="py-8 bg-gradient-hero">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card className="border-sage-light bg-background/80 backdrop-blur-sm shadow-card">
-              <CardContent className="flex items-center justify-center p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-sage-light rounded-full">
-                    <Gift className="h-8 w-8 text-sage-dark" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-primary">20% OFF</h3>
-                    <p className="text-muted-foreground">On your first order</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-sage-light bg-background/80 backdrop-blur-sm shadow-card">
-              <CardContent className="flex items-center justify-center p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-sage-light rounded-full">
-                    <Truck className="h-8 w-8 text-sage-dark" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold text-primary">Free Delivery</h3>
-                    <p className="text-muted-foreground">On all orders nationwide</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+      <section className="relative h-[100vh] w-full overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 bg-no-repeat bg-center bg-cover"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        >
+          <div className="absolute inset-0 bg-primary/10"></div> {/* Maroon overlay for text contrast */}
         </div>
-      </section> */}
+      </section>
+
+      {/* Text Content at Bottom */}
+      <div className="w-full z-10 text-center px-4 bg-primary py-6">
+        <h1 className="text-3xl md:text-5xl font-bold text-primary-foreground drop-shadow-lg">
+          Your Daily Ritual of{" "}
+          <span className="text-cream bg-gradient-to-r from-cream to-gold bg-clip-text text-transparent">
+            Radiance
+          </span>
+        </h1>
+
+        <p className="text-lg md:text-xl text-primary-foreground/90 mt-4 drop-shadow max-w-2xl mx-auto">
+          Discover scientifically-formulated skincare that nurtures your skin's natural beauty
+        </p>
+      </div>
+
+      <div className="min-h-[1px] min-w-full bg-maroon-darker"></div>
 
       {/* Featured Products */}
       <section className="py-16 bg-background">
@@ -133,10 +96,10 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
               </div>
             </>
           ) : (
-            <Card className="text-center py-12 border-sage-light/50">
+            <Card className="text-center py-12 border-maroon-light/50">
               <CardContent>
-                <div className="mx-auto mb-4 w-16 h-16 bg-sage-light rounded-full flex items-center justify-center">
-                  <Sparkles className="h-8 w-8 text-sage-dark" />
+                <div className="mx-auto mb-4 w-16 h-16 bg-maroon-light rounded-full flex items-center justify-center">
+                  <Sparkles className="h-8 w-8 text-maroon-dark" />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground mb-2">
                   No products available
@@ -154,7 +117,7 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
       </section>
 
       {/* Why Choose Section */}
-      <section className="py-16 bg-sage-light/30">
+      <section className="py-16 bg-maroon-light/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -165,7 +128,7 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center group">
               <div className="mx-auto mb-6 w-16 h-16 bg-gradient-button rounded-full flex items-center justify-center group-hover:animate-glow transition-all duration-300">
-                <Sparkles className="h-8 w-8 text-background" />
+                <Sparkles className="h-8 w-8 text-primary-foreground" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">
                 Scientifically Proven
@@ -177,7 +140,7 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
 
             <div className="text-center group">
               <div className="mx-auto mb-6 w-16 h-16 bg-gradient-button rounded-full flex items-center justify-center group-hover:animate-glow transition-all duration-300">
-                <Leaf className="h-8 w-8 text-background" />
+                <Leaf className="h-8 w-8 text-primary-foreground" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">
                 Natural Ingredients
@@ -189,7 +152,7 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
 
             <div className="text-center group">
               <div className="mx-auto mb-6 w-16 h-16 bg-gradient-button rounded-full flex items-center justify-center group-hover:animate-glow transition-all duration-300">
-                <Gift className="h-8 w-8 text-background" />
+                <Gift className="h-8 w-8 text-primary-foreground" />
               </div>
               <h3 className="text-xl font-semibold text-foreground mb-3">
                 Luxury Experience

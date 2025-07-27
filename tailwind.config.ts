@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,12 +62,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Welkin brand colors
+				// Welkin brand colors - updated to maroon theme
+				maroon: {
+					DEFAULT: 'hsl(var(--maroon))',
+					light: 'hsl(var(--maroon-light))',
+					dark: 'hsl(var(--maroon-dark))',
+					darker: 'hsl(var(--maroon-darker))'
+				},
+				// Keep sage for backward compatibility but using maroon values
 				sage: {
-					DEFAULT: 'hsl(var(--sage))',
-					light: 'hsl(var(--sage-light))',
-					dark: 'hsl(var(--sage-dark))',
-					darker: 'hsl(var(--sage-darker))'
+					DEFAULT: 'hsl(var(--maroon))',
+					light: 'hsl(var(--maroon-light))',
+					dark: 'hsl(var(--maroon-dark))',
+					darker: 'hsl(var(--maroon-darker))'
 				},
 				cream: 'hsl(var(--cream))',
 				gold: 'hsl(var(--gold))',
@@ -137,10 +143,10 @@ export default {
 				},
 				'glow': {
 					'0%, 100%': {
-						boxShadow: '0 0 20px hsl(var(--sage) / 0.3)'
+						boxShadow: '0 0 20px hsl(var(--maroon) / 0.3)'
 					},
 					'50%': {
-						boxShadow: '0 0 30px hsl(var(--sage) / 0.5)'
+						boxShadow: '0 0 30px hsl(var(--maroon) / 0.5)'
 					}
 				}
 			},

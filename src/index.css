@@ -8,92 +8,92 @@
 :root {
   /* Light mode colors - ALL in HSL format */
   --background: 0 0% 100%; /* Pure white */
-  --foreground: 222 84% 5%; /* Very dark */
+  --foreground: 0 25% 15%; /* Very dark maroon */
   
   --card: 0 0% 100%; /* Pure white */
-  --card-foreground: 222 84% 5%; /* Very dark */
+  --card-foreground: 0 25% 15%; /* Very dark maroon */
   
   --popover: 0 0% 100%; /* Pure white */
-  --popover-foreground: 222 84% 5%; /* Very dark */
+  --popover-foreground: 0 25% 15%; /* Very dark maroon */
   
-  --primary: 83 25% 45%; /* Sage green */
+  --primary: 0 60% 45%; /* Maroon/burgundy */
   --primary-foreground: 0 0% 100%; /* White */
   
-  --secondary: 92 39% 94%; /* Very light sage */
-  --secondary-foreground: 222 84% 5%; /* Very dark */
+  --secondary: 0 30% 95%; /* Very light maroon */
+  --secondary-foreground: 0 25% 15%; /* Very dark maroon */
   
-  --muted: 210 40% 96%; /* Light gray */
-  --muted-foreground: 215 16% 47%; /* Medium gray */
+  --muted: 0 10% 96%; /* Light gray with maroon tint */
+  --muted-foreground: 0 15% 47%; /* Medium gray with maroon tint */
   
-  --accent: 92 39% 94%; /* Very light sage */
-  --accent-foreground: 222 84% 5%; /* Very dark */
+  --accent: 0 30% 95%; /* Very light maroon */
+  --accent-foreground: 0 25% 15%; /* Very dark maroon */
   
   --destructive: 0 84% 60%; /* Red */
   --destructive-foreground: 0 0% 100%; /* White */
   
-  --border: 214 32% 91%; /* Light gray border */
-  --input: 214 32% 91%; /* Light gray */
-  --ring: 83 25% 45%; /* Sage green */
+  --border: 0 20% 91%; /* Light gray with maroon tint */
+  --input: 0 20% 91%; /* Light gray with maroon tint */
+  --ring: 0 60% 45%; /* Maroon/burgundy */
   
   --radius: 0.5rem;
   
-  /* Custom sage colors - ALL in HSL format */
-  --sage-light: 92 39% 94%; /* Very light sage for backgrounds */
-  --sage: 83 25% 60%; /* Medium sage */
-  --sage-dark: 83 25% 45%; /* Dark sage for accents */
-  --sage-darker: 83 25% 35%; /* Darker sage for hover states */
+  /* Custom maroon colors - ALL in HSL format */
+  --maroon-light: 0 30% 95%; /* Very light maroon for backgrounds */
+  --maroon: 0 50% 55%; /* Medium maroon */
+  --maroon-dark: 0 60% 45%; /* Dark maroon for accents */
+  --maroon-darker: 0 70% 35%; /* Darker maroon for hover states */
   
   /* Additional brand colors */
-  --cream: 48 100% 96%;
-  --gold: 43 96% 56%;
-  --rose: 350 100% 88%;
+  --cream: 30 40% 96%; /* Warm cream */
+  --gold: 43 70% 65%; /* Muted gold */
+  --rose: 350 50% 88%; /* Soft rose */
   
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, hsl(83 25% 60% / 0.1) 0%, hsl(83 25% 45% / 0.05) 100%);
-  --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(83 25% 60% / 0.02) 100%);
-  --gradient-button: linear-gradient(135deg, hsl(83 25% 45%) 0%, hsl(83 25% 35%) 100%);
-  --gradient-primary: linear-gradient(135deg, hsl(83 25% 45%) 0%, hsl(83 25% 35%) 100%);
+  --gradient-hero: linear-gradient(135deg, hsl(0 50% 55% / 0.1) 0%, hsl(0 60% 45% / 0.05) 100%);
+  --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(0 50% 55% / 0.02) 100%);
+  --gradient-button: linear-gradient(135deg, hsl(0 60% 45%) 0%, hsl(0 70% 35%) 100%);
+  --gradient-primary: linear-gradient(135deg, hsl(0 60% 45%) 0%, hsl(0 70% 35%) 100%);
   
   /* Shadows */
-  --shadow-soft: 0 2px 8px hsl(83 25% 45% / 0.06);
-  --shadow-card: 0 4px 16px hsl(83 25% 45% / 0.08);
-  --shadow-elegant: 0 8px 32px hsl(83 25% 45% / 0.12);
+  --shadow-soft: 0 2px 8px hsl(0 60% 45% / 0.06);
+  --shadow-card: 0 4px 16px hsl(0 60% 45% / 0.08);
+  --shadow-elegant: 0 8px 32px hsl(0 60% 45% / 0.12);
 }
 
 .dark {
-  --background: 222 84% 5%; /* Very dark */
-  --foreground: 210 40% 98%; /* Very light gray */
+  --background: 0 25% 8%; /* Very dark maroon */
+  --foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
-  --card: 222 84% 5%; /* Very dark */
-  --card-foreground: 210 40% 98%; /* Very light gray */
+  --card: 0 25% 8%; /* Very dark maroon */
+  --card-foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
-  --popover: 222 84% 5%; /* Very dark */
-  --popover-foreground: 210 40% 98%; /* Very light gray */
+  --popover: 0 25% 8%; /* Very dark maroon */
+  --popover-foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
-  --primary: 83 25% 45%; /* Sage green */
-  --primary-foreground: 210 40% 98%; /* Very light gray */
+  --primary: 0 60% 55%; /* Lighter maroon for dark mode */
+  --primary-foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
-  --secondary: 217 33% 17%; /* Dark gray */
-  --secondary-foreground: 210 40% 98%; /* Very light gray */
+  --secondary: 0 30% 15%; /* Dark maroon gray */
+  --secondary-foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
-  --muted: 217 33% 17%; /* Dark gray */
-  --muted-foreground: 215 20% 65%; /* Medium gray */
+  --muted: 0 30% 15%; /* Dark maroon gray */
+  --muted-foreground: 0 20% 65%; /* Medium gray with maroon tint */
   
-  --accent: 217 33% 17%; /* Dark gray */
-  --accent-foreground: 210 40% 98%; /* Very light gray */
+  --accent: 0 30% 15%; /* Dark maroon gray */
+  --accent-foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
   --destructive: 0 63% 31%; /* Dark red */
-  --destructive-foreground: 210 40% 98%; /* Very light gray */
+  --destructive-foreground: 0 10% 95%; /* Very light gray with maroon tint */
   
-  --border: 217 33% 17%; /* Dark gray border */
-  --input: 217 33% 17%; /* Dark gray */
-  --ring: 83 25% 45%; /* Sage green */
+  --border: 0 30% 15%; /* Dark maroon gray border */
+  --input: 0 30% 15%; /* Dark maroon gray */
+  --ring: 0 60% 55%; /* Lighter maroon for dark mode */
   
-  /* Custom sage colors for dark mode */
-  --sage-light: 83 15% 25%; /* Dark sage for backgrounds */
-  --sage: 83 20% 40%; /* Medium sage */
-  --sage-dark: 83 22% 60%; /* Light sage for accents */
-  --sage-darker: 83 25% 70%; /* Lighter sage for hover states */
+  /* Custom maroon colors for dark mode */
+  --maroon-light: 0 25% 25%; /* Dark maroon for backgrounds */
+  --maroon: 0 40% 50%; /* Medium maroon */
+  --maroon-dark: 0 50% 65%; /* Light maroon for accents */
+  --maroon-darker: 0 60% 75%; /* Lighter maroon for hover states */
 }
 
 * {
@@ -213,5 +213,5 @@ body {
 }
 
 .prose a:hover {
-  color: hsl(var(--sage-darker));
+  color: hsl(var(--maroon-darker));
 }

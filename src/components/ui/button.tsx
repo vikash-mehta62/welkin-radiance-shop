@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -18,11 +19,11 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Welkin Brand Variants
+        // Welkin Brand Variants - Updated for maroon theme
         hero: "bg-gradient-button text-primary-foreground hover:shadow-elegant transition-all duration-300 hover:scale-105",
-        luxury: "bg-sage text-background hover:bg-sage-dark shadow-soft hover:shadow-card transition-all duration-300",
-        minimal: "bg-background border-2 border-sage text-sage hover:bg-sage hover:text-background transition-all duration-300",
-        accent: "bg-gold text-sage-dark hover:bg-gold/90 shadow-soft transition-all duration-300"
+        luxury: "bg-maroon text-background hover:bg-maroon-dark shadow-soft hover:shadow-card transition-all duration-300",
+        minimal: "bg-background border-2 border-maroon text-maroon hover:bg-maroon hover:text-background transition-all duration-300",
+        accent: "bg-gold text-maroon-dark hover:bg-gold/90 shadow-soft transition-all duration-300"
       },
       size: {
         default: "h-10 px-4 py-2",
