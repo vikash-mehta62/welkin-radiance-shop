@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import ProductCard from "@/components/ProductCard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Gift, Truck, Sparkles, Leaf } from "lucide-react";
-import heroImage from "@/assets/hero-skincare.jpg";
+import heroImage from "/banner.jpg";
 import productsGrid from "@/assets/products-grid.jpg";
 
 const Home = () => {
@@ -38,34 +38,32 @@ const featuredProducts = sortedProducts.slice(0, 4).map(product => ({
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-sage-dark/30 to-background/50"></div>
-        </div>
-        
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-4 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Your Daily Ritual of{" "}
-            <span className="text-primary bg-gradient-to-r from-primary to-sage bg-clip-text text-transparent">
-              Radiance
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Discover scientifically-formulated skincare that nurtures your skin's natural beauty
-          </p>
-          {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4">
-              Shop Now
-            </Button>
-            <Button variant="minimal" size="lg" className="text-lg px-8 py-4">
-              Learn More
-            </Button>
-          </div> */}
-        </div>
-      </section>
+ <section className="relative h-[100vh] w-full overflow-hidden">
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 bg-no-repeat bg-center bg-cover"
+    style={{ backgroundImage: `url(${heroImage})` }}
+  >
+    <div className="absolute "></div> {/* Soft overlay for text contrast */}
+  </div>
+
+
+</section>
+  {/* Text Content at Bottom */}
+  <div className=" w-full z-10 text-center px-4 bg-green-600 py-3">
+    <h1 className="text-3xl md:text-5xl font-bold text-amber-800 drop-shadow">
+      Your Daily Ritual of{" "}
+      <span className="text-gray-300 bg-gradient-to-r from-primary to-sage bg-clip-text text-transparent">
+        Radiance
+      </span>
+    </h1>
+
+    <p className="text-lg md:text-xl text-gray-800 mt-4 drop-shadow max-w-2xl mx-auto">
+      Discover scientifically-formulated skincare that nurtures your skin's natural beauty
+    </p>
+  </div>
+
+<div className="min-h-[1px] min-w-full bg-gray-600 "></div>
 
       {/* Offers Section */}
       {/* <section className="py-8 bg-gradient-hero">
