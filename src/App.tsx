@@ -77,10 +77,10 @@ const App = () => {
                     <Route path="/products" element={<Products />} />
                     <Route path="/products/:slug" element={<Product />} />
                     <Route path="/about" element={<About />} />
-                    {/* <Route path="/contact" element={<Contact />} />
+                    <Route path="/contact" element={<Contact />} />
                     <Route path="/shipping" element={<ShippingInfo />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} /> */}
-                    {/* <Route path="/terms" element={<TermsOfService />} /> */}
+                    <Route path="/privacy" element={<PrivacyPolicy />} />
+                    <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
                     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />

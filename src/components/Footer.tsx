@@ -27,8 +27,8 @@ const Footer = () => {
   const categories = [
     { name: "Derma Gold Intense Glow Cream ", href: "/products?category=serum" },
     { name: "Derma White ", href: "/products?category=moisturizer" },
-    { name: "Tablet UV Shield ", href: "/products?category=cleanser" },
     { name: "G4 Max Glow ", href: "/products?category=toner" },
+    { name: "Tablet UV Shield ", href: "/products?category=cleanser" },
 
   ];
 
