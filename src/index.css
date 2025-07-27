@@ -9,56 +9,57 @@
   /* Light mode colors - ALL in HSL format */
   --background: 0 0% 100%; /* Pure white */
   --foreground: 0 25% 15%; /* Very dark maroon */
-  
-  --card: 0 0% 100%; /* Pure white */
-  --card-foreground: 0 25% 15%; /* Very dark maroon */
-  
-  --popover: 0 0% 100%; /* Pure white */
-  --popover-foreground: 0 25% 15%; /* Very dark maroon */
-  
-  --primary: 0 60% 45%; /* Maroon/burgundy */
-  --primary-foreground: 0 0% 100%; /* White */
-  
-  --secondary: 0 30% 95%; /* Very light maroon */
-  --secondary-foreground: 0 25% 15%; /* Very dark maroon */
-  
-  --muted: 0 10% 96%; /* Light gray with maroon tint */
-  --muted-foreground: 0 15% 47%; /* Medium gray with maroon tint */
-  
-  --accent: 0 30% 95%; /* Very light maroon */
-  --accent-foreground: 0 25% 15%; /* Very dark maroon */
-  
-  --destructive: 0 84% 60%; /* Red */
-  --destructive-foreground: 0 0% 100%; /* White */
-  
-  --border: 0 20% 91%; /* Light gray with maroon tint */
-  --input: 0 20% 91%; /* Light gray with maroon tint */
-  --ring: 0 60% 45%; /* Maroon/burgundy */
-  
+
+  --card: 0 0% 100%;
+  --card-foreground: 0 25% 15%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 25% 15%;
+
+  --primary: 2 64% 29%; /* Matched maroon from logo */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 30% 95%;
+  --secondary-foreground: 0 25% 15%;
+
+  --muted: 0 10% 96%;
+  --muted-foreground: 0 15% 47%;
+
+  --accent: 0 30% 95%;
+  --accent-foreground: 0 25% 15%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 20% 91%;
+  --input: 0 20% 91%;
+  --ring: 2 64% 29%;
+
   --radius: 0.5rem;
-  
-  /* Custom maroon colors - ALL in HSL format */
-  --maroon-light: 0 30% 95%; /* Very light maroon for backgrounds */
-  --maroon: 0 50% 55%; /* Medium maroon */
-  --maroon-dark: 0 60% 45%; /* Dark maroon for accents */
-  --maroon-darker: 0 70% 35%; /* Darker maroon for hover states */
-  
+
+  /* Custom maroon colors - Updated to match logo */
+  --maroon-light: 0 30% 95%;
+  --maroon: 2 64% 29%;
+  --maroon-dark: 2 66% 25%;
+  --maroon-darker: 2 70% 20%;
+
   /* Additional brand colors */
-  --cream: 30 40% 96%; /* Warm cream */
-  --gold: 43 70% 65%; /* Muted gold */
-  --rose: 350 50% 88%; /* Soft rose */
-  
+  --cream: 30 40% 96%;
+  --gold: 43 70% 65%;
+  --rose: 350 50% 88%;
+
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, hsl(0 50% 55% / 0.1) 0%, hsl(0 60% 45% / 0.05) 100%);
-  --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(0 50% 55% / 0.02) 100%);
-  --gradient-button: linear-gradient(135deg, hsl(0 60% 45%) 0%, hsl(0 70% 35%) 100%);
-  --gradient-primary: linear-gradient(135deg, hsl(0 60% 45%) 0%, hsl(0 70% 35%) 100%);
-  
+  --gradient-hero: linear-gradient(135deg, hsl(2 64% 29% / 0.1) 0%, hsl(2 70% 20% / 0.05) 100%);
+  --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(2 64% 29% / 0.02) 100%);
+  --gradient-button: linear-gradient(135deg, hsl(2 64% 29%) 0%, hsl(2 70% 20%) 100%);
+  --gradient-primary: linear-gradient(135deg, hsl(2 64% 29%) 0%, hsl(2 70% 20%) 100%);
+
   /* Shadows */
-  --shadow-soft: 0 2px 8px hsl(0 60% 45% / 0.06);
-  --shadow-card: 0 4px 16px hsl(0 60% 45% / 0.08);
-  --shadow-elegant: 0 8px 32px hsl(0 60% 45% / 0.12);
+  --shadow-soft: 0 2px 8px hsl(2 64% 29% / 0.06);
+  --shadow-card: 0 4px 16px hsl(2 64% 29% / 0.08);
+  --shadow-elegant: 0 8px 32px hsl(2 64% 29% / 0.12);
 }
+
 
 .dark {
   --background: 0 25% 8%; /* Very dark maroon */

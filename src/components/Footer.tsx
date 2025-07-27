@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { slugOrder } from "@/pages/Home";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -16,19 +17,19 @@ const Footer = () => {
     { name: "About Us", href: "/about" },
     { name: "Contact", href: "/contact" },
     { name: "Shipping Info", href: "/shipping" },
-    { name: "Returns", href: "/returns" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Service", href: "/terms" },
     { name: "Admin", href: "/admin" },
   ];
 
+  
+
   const categories = [
-    { name: "Serums", href: "/products?category=serum" },
-    { name: "Moisturizers", href: "/products?category=moisturizer" },
-    { name: "Cleansers", href: "/products?category=cleanser" },
-    { name: "Toners", href: "/products?category=toner" },
-    { name: "Sunscreens", href: "/products?category=sunscreen" },
-    { name: "Gift Sets", href: "/products?category=gift-sets" },
+    { name: "Derma Gold Intense Glow Cream 30 gm", href: "/products?category=serum" },
+    { name: "Derma White 50 gm", href: "/products?category=moisturizer" },
+    { name: "Tablet UV Shield 1X10 Tablets", href: "/products?category=cleanser" },
+    { name: "G4 Max Glow 1X10 Capsules", href: "/products?category=toner" },
+
   ];
 
   return (
@@ -38,10 +39,11 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-background rounded-full flex items-center justify-center">
+              <img src="/logo2.jpg" alt="not found" className="w-32 rounded-xl"/>
+              {/* <div className="w-8 h-8 bg-background rounded-full flex items-center justify-center">
                 <span className="text-sage-dark font-bold text-sm">W</span>
               </div>
-              <span className="text-xl font-bold">Welkin</span>
+              <span className="text-xl font-bold">Welkin</span> */}
             </div>
             <p className="text-sage-light text-sm leading-relaxed">
               Your daily ritual of radiance. Premium skincare products crafted with scientifically-proven ingredients for healthy, glowing skin.
@@ -81,21 +83,22 @@ const Footer = () => {
           </div>
 
           {/* Categories */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Shop By Category</h3>
-            <ul className="space-y-2">
-              {categories.map((category) => (
-                <li key={category.name}>
-                  <Link
-                    to={category.href}
-                    className="text-sage-light hover:text-background transition-colors text-sm"
-                  >
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+         <div className="space-y-4">
+  <h3 className="text-lg font-semibold">Shop By Products</h3>
+  <ul className="space-y-2">
+    {categories.map((category, index) => (
+      <li key={category.name}>
+        <Link
+          to={`/products/${slugOrder[index]}`} // use slugOrder by index
+          className="text-sage-light hover:text-background transition-colors text-sm"
+        >
+          {category.name}
+        </Link>
+      </li>
+    ))}
+  </ul>
+</div>
+
 
           {/* Contact Info */}
           <div className="space-y-4">
@@ -103,18 +106,17 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-sage-light" />
-                <span className="text-sage-light text-sm">hello@welkinonline.in</span>
+                <span className="text-sage-light text-sm">welkin.pharma@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-4 w-4 text-sage-light" />
-                <span className="text-sage-light text-sm">+91 9876543210</span>
+                <span className="text-sage-light text-sm">+91 7000060407</span>
               </div>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-sage-light mt-0.5" />
                 <span className="text-sage-light text-sm">
-                  123 Beauty Street<br />
-                  Mumbai, India 400001
-                </span>
+                  19, Hussain Building,<br />
+ Ist Floor Old Saifia College Road, Bhopal-462001                </span>
               </div>
             </div>
           </div>
