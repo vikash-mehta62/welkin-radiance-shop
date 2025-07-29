@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 import { slugOrder } from "@/pages/Home";
+import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -22,14 +30,14 @@ const Footer = () => {
     { name: "Admin", href: "/admin" },
   ];
 
-
-
   const categories = [
-    { name: "Derma Gold Intense Glow Cream ", href: "/products?category=serum" },
+    {
+      name: "Derma Gold Intense Glow Cream ",
+      href: "/products?category=serum",
+    },
     { name: "Derma White ", href: "/products?category=moisturizer" },
     { name: "G4 Max Glow ", href: "/products?category=toner" },
     { name: "Tablet UV Shield ", href: "/products?category=cleanser" },
-
   ];
 
   return (
@@ -39,14 +47,19 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img src="/logo2.jpg" alt="not found" className="w-32 rounded-xl" />
+              <img
+                src="/logo2.jpg"
+                alt="not found"
+                className="w-32 rounded-xl"
+              />
               {/* <div className="w-8 h-8 bg-background rounded-full flex items-center justify-center">
                 <span className="text-sage-dark font-bold text-sm">W</span>
               </div>
               <span className="text-xl font-bold">Welkin</span> */}
             </div>
             <p className="text-sage-light text-sm leading-relaxed">
-              Your daily ritual of radiance. Premium skincare products crafted with scientifically-proven ingredients for healthy, glowing skin.
+              Your daily ritual of radiance. Premium skincare products crafted
+              with scientifically-proven ingredients for healthy, glowing skin.
             </p>
             <div className="flex space-x-3">
               {socialLinks.map((social) => (
@@ -99,25 +112,36 @@ const Footer = () => {
             </ul>
           </div>
 
-
           {/* Contact Info */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Get in Touch</h3>
             <div className="space-y-2">
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-sage-light" />
-                <span className="text-sage-light text-sm">welkin.pharma@gmail.com</span>
+                <span className="text-sage-light text-sm">
+                  welkin.pharma@gmail.com
+                </span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="h-4 w-4 text-sage-light" />
-                <span className="text-sage-light text-sm">+91 7000060407</span>
-              </div>
+              <a
+                href="https://wa.me/917000060407"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sage-light text-sm hover:text-green-500 transition-colors"
+              >
+                <FaWhatsapp className="w-4 h-4" />
+                <span>+91 7000060407</span>
+              </a>
+
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-sage-light mt-0.5" />
                 <span className="text-sage-light text-sm">
                   Welkin Pharmaceuticals <br />
-                  19, Hussain Building,<br />
-                  1st Floor , Opp. Modi Medical Stores, Old Saifia College Road Bhopal (MP)  Pin Code - 462001                </span>
+                  19, Hussain Building,
+                  <br />
+                  1st Floor , Opp. Modi Medical Stores,
+                  <br /> Old Saifia College Road Bhopal (MP) <br />
+                  Pin Code - 462001{" "}
+                </span>
               </div>
             </div>
           </div>

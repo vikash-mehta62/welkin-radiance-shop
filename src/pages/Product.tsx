@@ -101,13 +101,10 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
   const relatedProducts = products
-    .filter(
-      (p) =>
-        p.id !== product.slug &&
-        p.category.some((cat) => product.category.includes(cat))
-    )
-    .slice(0, 4); // Get up to 4 related products
+    .filter((p) => p.slug !== product.slug)
+    .slice(0, 10);
 
   if (!product) {
     return (
@@ -335,7 +332,6 @@ export default function ProductPage() {
             {product.keyBenefits && (
               <Card className="border-0 shadow-md bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
                 <CardContent className="p-3 lg:p-4">
-           
                   <div
                     className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed [&>ul]:space-y-1 [&>ul>li]:text-xs [&>ul>li]:lg:text-sm [&>ul>li]:leading-snug"
                     dangerouslySetInnerHTML={{ __html: product.keyBenefits }}
@@ -438,7 +434,7 @@ export default function ProductPage() {
                 className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden"
               >
                 <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                 Recommended for
+                  Recommended for
                 </AccordionTrigger>
                 <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4">
                   <div
