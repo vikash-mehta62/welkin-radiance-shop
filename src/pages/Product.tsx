@@ -1,6 +1,6 @@
 import type React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom"; // Link for related products
+import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"; // Added CardTitle, CardDescription
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -26,16 +26,15 @@ import {
   ChevronLeft,
   ChevronRight,
   ZoomIn,
+  ShoppingCart,
+  CreditCard
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
 
-// Mock contexts - replace with your actual contexts
-const useCart = () => ({
-  addItem: (item: any) => console.log("Added to cart:", item),
-});
-
-// Mock Product Card Component for Related Products (if not already existing)
+// Mock Product Card Component for Related Products
 interface ProductCardProps {
   product: any;
 }
@@ -83,8 +82,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               )}
             </div>
           </div>
-          {/* You might want an Add to Cart button here for quick purchase */}
-          {/* <Button size="sm" className="mt-3 w-full">Add to Cart</Button> */}
         </CardContent>
       </Card>
     </Link>
@@ -96,6 +93,7 @@ export default function ProductPage() {
   const { products } = useAdmin();
   const product = products.find((p) => p.slug === slug);
   const { addItem } = useCart();
+  const { toast } = useToast();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -103,7 +101,7 @@ export default function ProductPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const relatedProducts = products
-    .filter((p) => p.slug !== product.slug)
+    .filter((p) => p.slug !== product?.slug)
     .slice(0, 10);
 
   if (!product) {
@@ -136,6 +134,17 @@ export default function ProductPage() {
         image: product.images[0] || "/placeholder.svg",
       });
     }
+    
+    toast({
+      title: "Added to Cart!",
+      description: `${quantity} x ${product.title} added to your cart.`,
+    });
+  };
+
+  const handleBuyNow = () => {
+    handleAddToCart();
+    // Navigate to checkout or cart
+    window.location.href = "/cart";
   };
 
   const incrementQuantity = () => {
@@ -176,12 +185,10 @@ export default function ProductPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-4 sm:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 max-w-6xl mx-auto">
-          {/* Product Images Section - Sticky */}
           <div className="lg:sticky lg:top-4 lg:h-fit space-y-3 lg:space-y-4">
-            {/* Main img with Zoom */}
             <div className="relative group">
               <div
-                className="relative overflow-hidden rounded-lg lg:rounded-xl bg-white shadow-lg lg:shadow-xl aspect-square cursor-zoom-in flex items-center justify-center" // Added flex for centering
+                className="relative overflow-hidden rounded-lg lg:rounded-xl bg-white shadow-lg lg:shadow-xl aspect-square cursor-zoom-in flex items-center justify-center"
                 onMouseEnter={() => setIsZoomed(true)}
                 onMouseLeave={() => setIsZoomed(false)}
                 onMouseMove={handleMouseMove}
@@ -190,7 +197,6 @@ export default function ProductPage() {
                   src={product.images[selectedImageIndex] || "/placeholder.svg"}
                   alt={product.title}
                   className={`w-full h-full object-contain transition-transform duration-300 ${
-                    // object-contain for fitting, w-full h-full for fixed size
                     isZoomed ? "scale-150" : "scale-100"
                   }`}
                   style={{
@@ -198,7 +204,6 @@ export default function ProductPage() {
                   }}
                 />
 
-                {/* Navigation Arrows */}
                 {product.images.length > 1 && (
                   <>
                     <Button
@@ -220,7 +225,6 @@ export default function ProductPage() {
                   </>
                 )}
 
-                {/* Zoom Indicator */}
                 <div className="absolute top-2 lg:top-3 right-2 lg:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <div className="bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
                     <ZoomIn className="h-3 w-3" />
@@ -229,7 +233,6 @@ export default function ProductPage() {
                 </div>
               </div>
 
-              {/* img Counter */}
               {product.images.length > 1 && (
                 <div className="absolute bottom-2 lg:bottom-3 left-1/2 -translate-x-1/2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
                   {selectedImageIndex + 1} / {product.images.length}
@@ -237,7 +240,6 @@ export default function ProductPage() {
               )}
             </div>
 
-            {/* Thumbnail Images */}
             {product.images.length > 1 && (
               <div className="flex gap-2 overflow-x-auto pb-2">
                 {product.images.map((image, index) => (
@@ -245,7 +247,6 @@ export default function ProductPage() {
                     key={index}
                     onClick={() => setSelectedImageIndex(index)}
                     className={`relative flex-shrink-0 w-14 h-14 lg:w-16 lg:h-16 rounded-md lg:rounded-lg overflow-hidden transition-all duration-200 flex items-center justify-center ${
-                      // Added flex for centering thumbnails
                       selectedImageIndex === index
                         ? "ring-2 ring-blue-500 ring-offset-1 scale-105"
                         : "hover:scale-105 hover:shadow-md"
@@ -254,7 +255,7 @@ export default function ProductPage() {
                     <img
                       src={image || "/placeholder.svg"}
                       alt={`${product.title} ${index + 1}`}
-                      className="w-full h-full object-contain" // object-contain for fitting, w-full h-full for fixed size
+                      className="w-full h-full object-contain"
                     />
                   </button>
                 ))}
@@ -262,9 +263,7 @@ export default function ProductPage() {
             )}
           </div>
 
-          {/* Product Details Section */}
           <div className="space-y-4 lg:space-y-5">
-            {/* Product Header */}
             <div className="space-y-2 lg:space-y-3">
               <div className="flex flex-wrap items-center gap-1.5">
                 <Badge
@@ -303,7 +302,6 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Price Section */}
             <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 p-3 lg:p-4 rounded-lg lg:rounded-xl">
               <div className="flex items-center gap-2 lg:gap-3 mb-1">
                 <span className="text-xl lg:text-2xl font-bold text-slate-900 dark:text-slate-100">
@@ -328,7 +326,6 @@ export default function ProductPage() {
               </p>
             </div>
 
-            {/* Key Benefits - Compact Design */}
             {product.keyBenefits && (
               <Card className="border-0 shadow-md bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">
                 <CardContent className="p-3 lg:p-4">
@@ -340,7 +337,6 @@ export default function ProductPage() {
               </Card>
             )}
 
-            {/* Quantity and Add to Cart */}
             <div className="space-y-3 lg:space-y-4">
               <div className="flex items-center gap-3 lg:gap-4">
                 <span className="text-sm lg:text-base font-medium text-slate-900 dark:text-slate-100">
@@ -370,36 +366,46 @@ export default function ProductPage() {
                 </div>
               </div>
 
-              <div className="flex gap-2 lg:gap-3">
+              <div className="space-y-3">
                 <Button
-                  className="flex-1 h-10 lg:h-11 text-sm lg:text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                  className="w-full h-11 lg:h-12 text-sm lg:text-base font-semibold bg-gradient-to-r from-maroon to-maroon-dark hover:from-maroon-dark hover:to-maroon text-background shadow-lg hover:shadow-xl transition-all duration-200"
+                  onClick={handleBuyNow}
+                >
+                  <CreditCard className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
+                  Buy It Now - ₹{(product.sellingPrice * quantity).toLocaleString()}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="w-full h-11 lg:h-12 text-sm lg:text-base font-semibold border-2 border-maroon text-maroon hover:bg-maroon hover:text-background transition-all duration-200"
                   onClick={handleAddToCart}
                 >
-                  Add to Cart - ₹
-                  {(product.sellingPrice * quantity).toLocaleString()}
+                  <ShoppingCart className="h-4 w-4 lg:h-5 lg:w-5 mr-2" />
+                  Add to Cart
                 </Button>
 
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
-                >
-                  <Heart className="h-4 w-4 lg:h-5 lg:w-5" />
-                </Button>
+                <div className="flex gap-2 lg:gap-3 justify-center">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
+                  >
+                    <Heart className="h-4 w-4 lg:h-5 lg:w-5" />
+                  </Button>
 
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
-                >
-                  <Share2 className="h-4 w-4 lg:h-5 lg:w-5" />
-                </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
+                  >
+                    <Share2 className="h-4 w-4 lg:h-5 lg:w-5" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Product Information Accordion */}
         <div className="mt-8 lg:mt-12 max-w-5xl mx-auto" id="product-info">
           <h2 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 lg:mb-6 text-center">
             Product Information
@@ -504,13 +510,11 @@ export default function ProductPage() {
                       key={block.id}
                       className="border-b border-slate-200 dark:border-slate-700 pb-4 lg:pb-6 last:border-b-0"
                     >
-                      {/* Alternating layout: even index = image left, odd index = image right */}
                       <div
                         className={`grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center ${
                           index % 2 === 1 ? "lg:flex-row-reverse" : ""
                         }`}
                       >
-                        {/* Content */}
                         <div
                           className={`space-y-2 lg:space-y-3 ${
                             index % 2 === 1 ? "lg:order-2" : "lg:order-1"
@@ -527,7 +531,6 @@ export default function ProductPage() {
                           />
                         </div>
 
-                        {/* img */}
                         {block.image && (
                           <div
                             className={`${
@@ -583,7 +586,6 @@ export default function ProductPage() {
           </Accordion>
         </div>
 
-        {/* Related Products Section: "You might also like" */}
         {relatedProducts.length > 0 && (
           <>
             <hr className="my-12 lg:my-16 border-t border-slate-200 dark:border-slate-700 max-w-7xl mx-auto" />
