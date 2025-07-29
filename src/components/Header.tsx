@@ -1,12 +1,11 @@
-
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { Button } from '@/components/ui/button';
-import { ShoppingCart, User, Menu, X, ChevronDown } from 'lucide-react';
-import { useCart } from '@/contexts/CartContext';
-import { useAdmin } from '@/contexts/AdminContext';
-import { RootState } from '@/redux/store';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, User, Menu, X, ChevronDown } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { useAdmin } from "@/contexts/AdminContext";
+import { RootState } from "@/redux/store";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -15,21 +14,54 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { categories } from '@/pages/admin/ProductForm';
+
+const categories = [
+  {
+    name: "Derma Gold Intense Glow Cream",
+    href: "/products/derma-gold-intense-glow-cream-30-gm",
+  },
+  {
+    name: "Derma White",
+    href: "/products/derma-white-50-gm",
+  },
+  {
+    name: "Tablet UV Shield",
+    href: "/products/tablet-uv-shield-1x10-tablets",
+  },
+  {
+    name: "G4 Max Glow",
+    href: "/products/g4-max-glow-1x10-capsules",
+  },
+  {
+    name: "Porcelain Beauty Kit",
+    href: "/products/porcelain-beauty-kit",
+  },
+  {
+    name: "Korean Glass Kit",
+    href: "/products/korean-glass-kit",
+  },
+  {
+    name: "Retinol Serum",
+    href: "/products/retinol-serum",
+  },
+];
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
   const { items } = useCart();
-  const { products } = useAdmin();
+  const { products } = useAdmin(); // This might not be needed for just categories
   const navigate = useNavigate();
 
   // Get user from Redux store
   const { user } = useSelector((state: RootState) => state.auth);
 
-  const cartItemsCount = items.reduce((total, item) => total + item.quantity, 0);
+  const cartItemsCount = items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
-  const allCategories = categories
+  const allCategories = categories; // Using the provided categories array directly
 
   const handleCategoryClick = (categoryId: string) => {
     navigate(`/products?category=${categoryId}`);
@@ -44,9 +76,9 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
             <div className="w-10 h-10 flex items-center justify-center">
-              <img 
-                src="/lovable-uploads/f2fa4fe0-2097-4be2-94df-6a2fc0ec6e1b.png" 
-                alt="Welkin Logo" 
+              <img
+                src="/lovable-uploads/f2fa4fe0-2097-4be2-94df-6a2fc0ec6e1b.png"
+                alt="Welkin Logo"
                 className="w-full h-full object-contain"
               />
             </div>
@@ -55,7 +87,10 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-foreground hover:text-primary transition-colors">
+            <Link
+              to="/"
+              className="text-foreground hover:text-primary transition-colors"
+            >
               Home
             </Link>
 
@@ -63,10 +98,13 @@ const Header = () => {
             <NavigationMenu>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className={`text-sm font-medium transition-colors hover:text-primary ${location.pathname.startsWith('/products')
-                    ? "text-primary border-b-2 border-primary pb-1"
-                    : "text-muted-foreground"
-                    }`}>
+                  <NavigationMenuTrigger
+                    className={`text-sm font-medium transition-colors hover:text-primary ${
+                      location.pathname.startsWith("/products")
+                        ? "text-primary border-b-2 border-primary pb-1"
+                        : "text-muted-foreground"
+                    }`}
+                  >
                     Products
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
@@ -81,20 +119,26 @@ const Header = () => {
                               All Products
                             </div>
                             <p className="text-sm leading-tight text-muted-foreground">
-                              Explore our complete range of premium skincare products
+                              Explore our complete range of premium skincare
+                              products
                             </p>
                           </Link>
                         </NavigationMenuLink>
                       </div>
                       <div className="grid gap-2">
-                        <div className="text-sm font-medium text-muted-foreground mb-2">Categories</div>
-                        {allCategories.slice(0, 6).map((category) => (
-                          <NavigationMenuLink key={category} asChild>
+                        <div className="text-sm font-medium text-muted-foreground mb-2">
+                          Products
+                        </div>
+                        {/* Displaying categories from the 'categories' array */}
+                        {allCategories.slice(0, 6).map((category, index) => (
+                          <NavigationMenuLink key={index} asChild>
                             <Link
-                              to={`/products?category=${encodeURIComponent(category)}`}
+                              to={category.href} // Use category.href directly
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                             >
-                              <div className="text-sm font-medium leading-none">{category}</div>
+                              <div className="text-sm font-medium leading-none">
+                                {category.name} {/* Use category.name */}
+                              </div>
                             </Link>
                           </NavigationMenuLink>
                         ))}
@@ -104,7 +148,9 @@ const Header = () => {
                               to="/products"
                               className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground text-primary"
                             >
-                              <div className="text-sm font-medium leading-none">View All Categories</div>
+                              <div className="text-sm font-medium leading-none">
+                                View All Products
+                              </div>
                             </Link>
                           </NavigationMenuLink>
                         )}
@@ -115,7 +161,10 @@ const Header = () => {
               </NavigationMenuList>
             </NavigationMenu>
 
-            <Link to="/about" className="text-foreground hover:text-primary transition-colors">
+            <Link
+              to="/about"
+              className="text-foreground hover:text-primary transition-colors"
+            >
               About
             </Link>
           </nav>
@@ -127,7 +176,7 @@ const Header = () => {
                 <Link to="/profile">
                   <Button variant="ghost" size="sm">
                     <User className="h-4 w-4 mr-2" />
-                    {user.name || 'Profile'}
+                    {user.name || "Profile"}
                   </Button>
                 </Link>
               </>
@@ -165,7 +214,11 @@ const Header = () => {
               size="sm"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -186,12 +239,15 @@ const Header = () => {
               <div className="space-y-2">
                 <button
                   className="flex items-center justify-between w-full px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                  onClick={() => setIsProductsDropdownOpen(!isProductsDropdownOpen)}
+                  onClick={() =>
+                    setIsProductsDropdownOpen(!isProductsDropdownOpen)
+                  }
                 >
                   <span>Products</span>
                   <ChevronDown
-                    className={`h-4 w-4 transition-transform ${isProductsDropdownOpen ? 'rotate-180' : ''
-                      }`}
+                    className={`h-4 w-4 transition-transform ${
+                      isProductsDropdownOpen ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
                 {isProductsDropdownOpen && (
@@ -206,18 +262,21 @@ const Header = () => {
                     >
                       All Products
                     </Link>
-                    <div className="text-sm font-medium text-muted-foreground mt-2">Categories:</div>
-                    {allCategories.slice(0, 4).map((category) => (
+                    <div className="text-sm font-medium text-muted-foreground mt-2">
+                      Categories:
+                    </div>
+                    {/* Displaying categories for mobile */}
+                    {allCategories.slice(0, 4).map((category, index) => (
                       <Link
-                        key={category}
-                        to={`/products?category=${encodeURIComponent(category)}`}
+                        key={index}
+                        to={category.href} // Use category.href
                         className="block text-sm text-muted-foreground hover:text-primary transition-colors"
                         onClick={() => {
                           setIsMenuOpen(false);
                           setIsProductsDropdownOpen(false);
                         }}
                       >
-                        {category}
+                        {category.name} {/* Use category.name */}
                       </Link>
                     ))}
                     {allCategories.length > 4 && (
@@ -252,7 +311,7 @@ const Header = () => {
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <User className="h-4 w-4 mr-2 inline" />
-                    {user.name || 'Profile'}
+                    {user.name || "Profile"}
                   </Link>
                 ) : (
                   <>

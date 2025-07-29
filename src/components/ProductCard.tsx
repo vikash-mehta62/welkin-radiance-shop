@@ -17,15 +17,15 @@ interface ProductCardProps {
   category?: string;
 }
 
-const ProductCard = ({ 
-  id, 
-  slug, 
-  title, 
-  mrp, 
-  sellingPrice, 
-  mainImage, 
+const ProductCard = ({
+  id,
+  slug,
+  title,
+  mrp,
+  sellingPrice,
+  mainImage,
   hoverImage,
-  category 
+  category,
 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = useCart();
@@ -35,15 +35,15 @@ const ProductCard = ({
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     addItem({
       id,
       slug,
       title,
       price: sellingPrice,
-      image: mainImage
+      image: mainImage,
     });
-    
+
     toast({
       title: "Added to Cart!",
       description: `${title} added to your cart.`,
@@ -51,7 +51,7 @@ const ProductCard = ({
   };
 
   return (
-    <Card 
+    <Card
       className="group overflow-hidden border-sage-light/50 hover:shadow-elegant transition-all duration-500 bg-gradient-card"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -77,9 +77,8 @@ const ProductCard = ({
               )}
             </div>
           </Link>
-          
+
           {/* Hover overlay with quick actions */}
-      
         </div>
 
         <div className="p-4 space-y-3">
@@ -88,17 +87,23 @@ const ProductCard = ({
               {title}
             </h3>
           </Link>
-          
+
           <div className="flex items-center space-x-2">
-            <span className="text-lg font-bold text-primary">₹{sellingPrice}</span>
+            <span className="text-lg font-bold text-primary">
+              ₹{sellingPrice}
+            </span>
             {mrp > sellingPrice && (
-              <span className="text-sm text-muted-foreground line-through">₹{mrp}</span>
+              <span className="text-sm text-muted-foreground line-through">
+                ₹{mrp}
+              </span>
             )}
           </div>
 
-          <Button variant="minimal" className="w-full">
-            View Details
-          </Button>
+          <Link to={`/products/${slug}`}>
+            <Button variant="minimal" className="w-full">
+              View Details
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

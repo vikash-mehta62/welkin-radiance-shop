@@ -38,6 +38,9 @@ const Footer = () => {
     { name: "Derma White ", href: "/products?category=moisturizer" },
     { name: "G4 Max Glow ", href: "/products?category=toner" },
     { name: "Tablet UV Shield ", href: "/products?category=cleanser" },
+    { name: "Porcelain Beauty Kit ", href: "/products?category=cleanser" },
+    { name: "Korean Glass Kit ", href: "/products?category=cleanser" },
+    { name: "Retinol Serum ", href: "/products?category=cleanser" },
   ];
 
   return (

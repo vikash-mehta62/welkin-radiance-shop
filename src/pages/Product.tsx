@@ -496,7 +496,7 @@ export default function ProductPage() {
                 className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden"
               >
                 <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                  Additional Information
+                  Caution
                 </AccordionTrigger>
                 <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4 space-y-6 lg:space-y-8">
                   {product.extraInfoBlocks.map((block, index) => (
@@ -516,33 +516,11 @@ export default function ProductPage() {
                             index % 2 === 1 ? "lg:order-2" : "lg:order-1"
                           }`}
                         >
-                          {block.title && (
-                            <h4 className="text-base lg:text-lg font-semibold text-slate-900 dark:text-slate-100">
-                              {block.title}
-                            </h4>
-                          )}
                           <div
                             className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed"
                             dangerouslySetInnerHTML={{ __html: block.content }}
                           />
                         </div>
-
-                        {/* img */}
-                        {block.image && (
-                          <div
-                            className={`${
-                              index % 2 === 1 ? "lg:order-1" : "lg:order-2"
-                            }`}
-                          >
-                            <div className="relative w-full h-40 lg:h-48 rounded-lg overflow-hidden shadow-md">
-                              <img
-                                src={block.image || "/placeholder.svg"}
-                                alt={block.title}
-                                className="object-cover hover:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                   ))}
