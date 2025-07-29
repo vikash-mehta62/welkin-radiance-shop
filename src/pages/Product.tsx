@@ -33,6 +33,8 @@ import { useParams } from "react-router-dom";
 import { useAdmin } from "@/contexts/AdminContext";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
+import { PatientResultsCarousel } from "@/components/PatientResultsCarousel";
+import { ConsultationModal } from "@/components/ConsultationModal";
 
 // Mock Product Card Component for Related Products
 interface ProductCardProps {
@@ -99,6 +101,7 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
 
   const relatedProducts = products
     .filter((p) => p.slug !== product?.slug)
@@ -406,6 +409,10 @@ export default function ProductPage() {
           </div>
         </div>
 
+        <div className="mt-12 lg:mt-16 max-w-6xl mx-auto">
+          <PatientResultsCarousel onConsultClick={() => setIsConsultationModalOpen(true)} />
+        </div>
+
         <div className="mt-8 lg:mt-12 max-w-5xl mx-auto" id="product-info">
           <h2 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-slate-100 mb-4 lg:mb-6 text-center">
             Product Information
@@ -602,6 +609,12 @@ export default function ProductPage() {
           </>
         )}
       </div>
+
+      {/* Consultation Modal */}
+      <ConsultationModal 
+        open={isConsultationModalOpen} 
+        onOpenChange={setIsConsultationModalOpen} 
+      />
     </div>
   );
 }
