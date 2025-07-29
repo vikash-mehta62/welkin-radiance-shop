@@ -167,6 +167,12 @@ const Header = () => {
             >
               About
             </Link>
+            <Link
+              to="/consultation"
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Consultation
+            </Link>
           </nav>
 
           {/* Desktop Actions */}

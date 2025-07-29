@@ -1,4 +1,3 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AdminProvider } from "@/contexts/AdminContext";
@@ -34,6 +33,8 @@ import AdminRoute from "./components/auth/AdminRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import { useEffect, useState } from "react";
+import ScrollToTop from "./ScrollToTop";
+import ConsultationForm from "./pages/ConsultationForm";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -41,26 +42,45 @@ const App = () => {
   const isAuthenticated = authData?.token ? true : false;
   const dispatch = useDispatch();
 
-  
   useEffect(() => {
     if (authData?.token) {
       dispatch(fetchMyProfile(authData?.token));
     }
-
   }, []);
   return (
-
-
     <TooltipProvider>
       <AdminProvider>
         <BrowserRouter>
+          <ScrollToTop />
+
           <Routes>
             {/* Auth Routes */}
-            <Route path="/login" element={<OpenRoute><Login /></OpenRoute>} />
-            <Route path="/signup" element={<OpenRoute><Signup /></OpenRoute>} />
+            <Route
+              path="/login"
+              element={
+                <OpenRoute>
+                  <Login />
+                </OpenRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <OpenRoute>
+                  <Signup />
+                </OpenRoute>
+              }
+            />
 
             {/* Admin Routes (Private) */}
-            <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
               <Route index element={<AdminDashboard />} />
               <Route path="products" element={<ProductManagement />} />
               <Route path="products/create" element={<ProductForm />} />
@@ -70,35 +90,56 @@ const App = () => {
             </Route>
 
             {/* Client Routes (with layout) */}
-            <Route path="/*" element={
-              <div className="min-h-screen flex flex-col">
-                <Header />
-                <main className="flex-1">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/products/:slug" element={<Product />} />
-                    <Route path="/video-consult" element={<VideoConsult />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/shipping" element={<ShippingInfo />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} />
-                    <Route path="/terms" element={<TermsOfService />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-                    <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-                    {/* Catch-all */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </div>
-            } />
+            <Route
+              path="/*"
+              element={
+                <div className="min-h-screen flex flex-col">
+                  <Header />
+                  <main className="flex-1">
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/products" element={<Products />} />
+                      <Route
+                        path="/consultation"
+                        element={<ConsultationForm />}
+                      />
+                      <Route path="/products/:slug" element={<Product />} />
+                      {/* <Route path="/video-consult" element={<VideoConsult />} /> */}
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/shipping" element={<ShippingInfo />} />
+                      <Route path="/privacy" element={<PrivacyPolicy />} />
+                      <Route path="/terms" element={<TermsOfService />} />
+                      <Route path="/cart" element={<Cart />} />
+                      <Route
+                        path="/checkout"
+                        element={
+                          <PrivateRoute>
+                            <Checkout />
+                          </PrivateRoute>
+                        }
+                      />
+                      <Route
+                        path="/profile"
+                        element={
+                          <PrivateRoute>
+                            <Profile />
+                          </PrivateRoute>
+                        }
+                      />
+                      {/* Catch-all */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                </div>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </AdminProvider>
     </TooltipProvider>
-  )
+  );
 };
 
 export default App;
