@@ -16,7 +16,7 @@ import {
   MessageSquareText,
   Sun,
 } from "lucide-react";
-
+import { createContactAPI } from "@/services2/operations/contact";
 const ConsultationForm = () => {
   const [formData, setFormData] = useState({
     doctorName: "",
@@ -60,15 +60,8 @@ const ConsultationForm = () => {
 
     try {
       // Replace with your actual API endpoint
-      const response = await fetch("/api/consultations", {
-        method: "POST",
-        body: dataToSend,
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        alert("Consultation booked successfully! " + JSON.stringify(result));
-        // Reset form to initial state
+      const response = await createContactAPI(dataToSend);
+      if (response?.data?.success) {
         setFormData({
           doctorName: "",
           yourAge: "",

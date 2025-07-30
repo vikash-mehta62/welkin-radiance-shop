@@ -104,6 +104,13 @@ export const crm = {
 
 
 }
+
+export const contact = {
+  SEND_CONTACT_TO_EMAIL: BASE_URL + "/contact/create",
+
+
+
+}
 export const dealCrm = {
   CREATE_DEAL_CRM: BASE_URL + "/crm-deal/create",
   GET_ALL_DEAL_CRM: BASE_URL + "/crm-deal/getAll",

@@ -40,6 +40,7 @@ app.use("/api/v1/image", require("./routes/imageRoute"));
 app.use("/api/v1/product", require("./routes/productRoute"));
 app.use("/api/v1/order", require("./routes/orderRoute"));
 app.use("/api/v1/dashboard", require("./routes/dashboardRoute"));
+app.use("/api/v1/contact", require("./routes/contactRoute"));
 
 app.get("/", (req, res) => {
   return res.json({
