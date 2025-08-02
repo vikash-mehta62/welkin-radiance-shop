@@ -167,12 +167,12 @@ const Header = () => {
             >
               About
             </Link>
-            <Link
+            {/* <Link
               to="/consultation"
               className="text-foreground hover:text-primary transition-colors"
             >
               Consultation
-            </Link>
+            </Link> */}
           </nav>
 
           {/* Desktop Actions */}
