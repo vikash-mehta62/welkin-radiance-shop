@@ -93,17 +93,27 @@ const AdminSidebar = () => {
                     className={cn(
                       "transition-all duration-200 group",
                       isActive(item.href)
-                        ? "bg-gradient-primary text-background shadow-md"
+                        ? "bg-gradient-primary text-white shadow-md"
                         : "hover:bg-sage-light/20 hover:scale-102"
                     )}
                   >
-                    <Link to={item.href}>
-                      <item.icon className={cn(
-                        "h-5 w-5 transition-transform group-hover:scale-110",
-                        isActive(item.href) ? "text-background" : ""
-                      )} />
-                      <span className="font-medium">{item.title}</span>
-                    </Link>
+                    <Link to={item.href} className="flex items-center gap-2">
+  <item.icon
+    className={cn(
+      "h-5 w-5 transition-transform group-hover:scale-110",
+      isActive(item.href) ? "text-white" : ""
+    )}
+  />
+  <span
+    className={cn(
+      "font-medium",
+      isActive(item.href) ? "text-white" : ""
+    )}
+  >
+    {item.title}
+  </span>
+</Link>
+
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
