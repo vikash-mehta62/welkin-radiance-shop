@@ -512,7 +512,7 @@ export default function ProductPage() {
                 className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden"
               >
                 <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                  Caution
+                  Precaution
                 </AccordionTrigger>
                 <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4 space-y-6 lg:space-y-8">
                   {product.extraInfoBlocks.map((block, index) => (

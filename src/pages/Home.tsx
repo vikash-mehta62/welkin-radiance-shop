@@ -53,12 +53,12 @@ const Home = () => {
           className="absolute inset-0 bg-no-repeat bg-center bg-cover"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-"></div>
         </div>
 
         {/* 15 Years Card */}
         <div className="absolute top-6 left-24 z-20">
-          <div className=" text-white px-8 py-6 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] max-w-sm">
+          <div className=" text-primary px-8 py-6 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] max-w-sm">
             <h1 className="text-3xl md:text-4xl font-bold mt-1 leading-tight">
               15 Years of <br /> Real Results
             </h1>
