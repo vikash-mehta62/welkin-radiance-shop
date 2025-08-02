@@ -47,6 +47,7 @@ const ProductSchema = new mongoose.Schema(
     skinSuitability: { type: String },
     ingredients: [{ type: String }],
     howToUse: { type: String },
+    precataions: { type: String ,},
     extraInfoBlocks: [ExtraInfoBlockSchema],
     faqs: [FAQSchema],
     inventoryHistory: [InventoryRecordSchema],

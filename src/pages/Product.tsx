@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -98,6 +98,9 @@ export default function ProductPage() {
   const { toast } = useToast();
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  useEffect(()=>{
+    setSelectedImageIndex(0)
+  },[slug])
   const [quantity, setQuantity] = useState(1);
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -388,23 +391,7 @@ export default function ProductPage() {
                   Add to Cart
                 </Button>
 
-                <div className="flex gap-2 lg:gap-3 justify-center">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
-                  >
-                    <Heart className="h-4 w-4 lg:h-5 lg:w-5" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-10 w-10 lg:h-11 lg:w-11 border-2 bg-transparent"
-                  >
-                    <Share2 className="h-4 w-4 lg:h-5 lg:w-5" />
-                  </Button>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -506,57 +493,76 @@ export default function ProductPage() {
               </AccordionItem>
             )}
 
-            {product.extraInfoBlocks && product.extraInfoBlocks.length > 0 && (
+
+
+   {product.precataions && (
               <AccordionItem
-                value="additional-info"
+                value="how-to-use"
                 className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden"
               >
                 <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                  Precaution
+                 Precautions
                 </AccordionTrigger>
-                <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4 space-y-6 lg:space-y-8">
-                  {product.extraInfoBlocks.map((block, index) => (
-                    <div
-                      key={block.id}
-                      className="border-b border-slate-200 dark:border-slate-700 pb-4 lg:pb-6 last:border-b-0"
-                    >
-                      <div
-                        className={`grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center ${
-                          index % 2 === 1 ? "lg:flex-row-reverse" : ""
-                        }`}
-                      >
-                        <div
-                          className={`space-y-2 lg:space-y-3 ${
-                            index % 2 === 1 ? "lg:order-2" : "lg:order-1"
-                          }`}
-                        >
-                          <div
-                            className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed"
-                            dangerouslySetInnerHTML={{ __html: block.content }}
-                          />
-                        </div>
-
-                        {block.image && (
-                          <div
-                            className={`${
-                              index % 2 === 1 ? "lg:order-1" : "lg:order-2"
-                            }`}
-                          >
-                            <div className="relative w-full h-40 lg:h-48 rounded-lg overflow-hidden shadow-md">
-                              <img
-                                src={block.image || "/placeholder.svg"}
-                                alt={block.title}
-                                className="object-cover hover:scale-105 transition-transform duration-300"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4">
+                  <div
+                    className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: product.precataions }}
+                  />
                 </AccordionContent>
               </AccordionItem>
             )}
+
+
+         {product.extraInfoBlocks && product.extraInfoBlocks.length > 0 && (
+  <Accordion type="multiple" className="w-full">
+    {product.extraInfoBlocks.map((block, index) => (
+      <AccordionItem
+        key={block.title + index}
+        value={`extra-info-${index}`}
+        className="border-0 bg-white dark:bg-slate-800 rounded-lg lg:rounded-xl shadow-md overflow-hidden mb-2"
+      >
+        <AccordionTrigger className="text-slate-900 dark:text-slate-100 text-sm lg:text-base font-semibold px-3 lg:px-6 py-3 lg:py-4 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-700/50">
+          {block.title}
+        </AccordionTrigger>
+        <AccordionContent className="px-3 lg:px-6 pb-3 lg:pb-4 space-y-6 lg:space-y-8">
+          <div
+            className={`grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 items-center ${
+              index % 2 === 1 ? "lg:flex-row-reverse" : ""
+            }`}
+          >
+            <div
+              className={`space-y-2 lg:space-y-3 ${
+                index % 2 === 1 ? "lg:order-2" : "lg:order-1"
+              }`}
+            >
+              <div
+                className="text-slate-700 dark:text-slate-300 text-xs lg:text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: block.content }}
+              />
+            </div>
+
+            {block.image && (
+              <div
+                className={`${
+                  index % 2 === 1 ? "lg:order-1" : "lg:order-2"
+                }`}
+              >
+                <div className="relative w-full h-40 lg:h-48 rounded-lg overflow-hidden shadow-md">
+                  <img
+                    src={block.image || "/placeholder.svg"}
+                    alt={block.title}
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </AccordionContent>
+      </AccordionItem>
+    ))}
+  </Accordion>
+)}
+
 
             {product.faqs && product.faqs.length > 0 && (
               <AccordionItem

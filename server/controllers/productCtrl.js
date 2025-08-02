@@ -5,7 +5,7 @@ const { z } = require("zod");
 const productSchema = z.object({
   title: z.string().min(1),
   slug: z.string().min(1),
-  type: z.string().min(1),
+
   mrp: z.number().nonnegative(),
   sellingPrice: z.number().nonnegative(),
   images: z.array(z.string().url()).min(1),
@@ -91,7 +91,7 @@ const updateProduct = async (req, res) => {
     };
 
     // ✅ Prepare $unset for empty fields
-    const fieldsToCheck = ["description", "skinSuitability", "howToUse", "keyBenefits"];
+    const fieldsToCheck = ["description", "skinSuitability", "howToUse", "keyBenefits","precataions"];
     const fieldsToUnset = {};
 
     fieldsToCheck.forEach((field) => {

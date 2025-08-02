@@ -16,6 +16,7 @@ export interface ProductFormData {
   skinSuitability: string;
   ingredients: string[];
   howToUse: string;
+  precataions?: string;
   extraInfoBlocks: Array<{
     id: string;
     image: string;
@@ -274,6 +275,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           skinSuitability: item.skinSuitability,
           ingredients: item.ingredients,
           howToUse: item.howToUse,
+          precataions: item.precataions,
           extraInfoBlocks: item.extraInfoBlocks?.map((block) => ({
             id: block?._id ||uuidv4(),
             image: block.image,
