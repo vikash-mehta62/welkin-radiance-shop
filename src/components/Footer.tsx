@@ -9,7 +9,7 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-import { slugOrder } from "@/pages/Home";
+
 import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
 const Footer = () => {
@@ -33,14 +33,14 @@ const Footer = () => {
   const categories = [
     {
       name: "Derma Gold Intense Glow Cream ",
-      href: "/products?category=serum",
+      href: "/products/derma-gold-intense-glow-cream-30-gm",
     },
-    { name: "Derma White ", href: "/products?category=moisturizer" },
-    { name: "G4 Max Glow ", href: "/products?category=toner" },
-    { name: "Tablet UV Shield ", href: "/products?category=cleanser" },
-    { name: "Porcelain Beauty Kit ", href: "/products?category=cleanser" },
-    { name: "Korean Glass Kit ", href: "/products?category=cleanser" },
-    { name: "Retinol Serum ", href: "/products?category=cleanser" },
+    { name: "Derma White ", href: "/products/derma-white-50-gm" },
+    { name: "Tablet UV Shield ", href: "/products/tablet-uv-shield-1x10-tablets" },
+    { name: "G4 Max Glow ", href: "/products/g4-max-glow-1x10-capsules" },
+    { name: "Porcelain Beauty Kit ", href: "/products/porcelain-beauty-kit" },
+    { name: "Korean Glass Kit ", href: "/products/korean-glass-beauty-kit" },
+
   ];
 
   return (
@@ -105,7 +105,7 @@ const Footer = () => {
               {categories.map((category, index) => (
                 <li key={category.name}>
                   <Link
-                    to={`/products/${slugOrder[index]}`} // use slugOrder by index
+                    to={category.href} // use slugOrder by index
                     className="text-sage-light hover:text-background transition-colors text-sm"
                   >
                     {category.name}

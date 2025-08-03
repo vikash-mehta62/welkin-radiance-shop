@@ -6,6 +6,18 @@ const Product = require("../models/productModel")
 const { instance } = require("../config/razorpay")
 
 const crypto = require("crypto")
+const Counter = require("../models/counterModel");
+
+const getNextOrderSequence = async () => {
+  const counter = await Counter.findByIdAndUpdate(
+    { _id: "order_seq" },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+
+  // Return padded order number, e.g., 00001
+  return counter.seq.toString().padStart(5, '0');
+};
 
 
 
@@ -154,7 +166,8 @@ const createOrder = asyncHandler(async (products, userId, address, razorpay_orde
   const email = userDetails.email;
 
   try {
-    const orderId = uuidv4();
+    // const orderId = uuidv4();
+const orderId = await getNextOrderSequence(); // e.g., "00001"
 
     const order = await Order.create({
       order_id: orderId, // Provide order_id

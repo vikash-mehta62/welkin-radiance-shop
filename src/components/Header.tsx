@@ -37,8 +37,8 @@ const categories = [
     href: "/products/porcelain-beauty-kit",
   },
   {
-    name: "Korean Glass Kit",
-    href: "/products/korean-glass-kit",
+    name: "Korean Glass Beauty Kit",
+    href: "/products/korean-glass-beauty-kit",
   },
   {
     name: "Retinol Serum",

@@ -20,7 +20,7 @@ export const slugOrder = [
   "tablet-uv-shield-1x10-tablets",
   "g4-max-glow-1x10-capsules",
   "porcelain-beauty-kit",
-  "korean-glass-kit",
+  "korean-glass-beauty-kit",
   "retinol-serum",
 ];
 const Home = () => {
