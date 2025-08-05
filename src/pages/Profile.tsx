@@ -15,15 +15,24 @@ import {
   Package,
   CreditCard,
   Settings,
+  LogOut,
 } from "lucide-react";
 import { getUserAPI } from "@/services2/operations/auth";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import UserOrder from "./UserOrder";
+import {logout} from "@/services2/operations/auth"
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const authData = useSelector((state: RootState) => state.auth);
+const navigate = useNavigate();
+const dispatch = useDispatch();
+
+const handleLogit = async () => {
+  await dispatch(logout(navigate));
+};
 
   console.log(authData);
   // Mock user data
@@ -62,30 +71,7 @@ const Profile = () => {
     ],
   };
 
-  // Mock order data
-  const orders = [
-    {
-      id: "ORD-2024-001",
-      date: "Dec 15, 2024",
-      status: "Delivered",
-      total: 2299,
-      items: [
-        { name: "Brightening Vitamin C Serum", quantity: 1, price: 999 },
-        { name: "Hydrating Hyaluronic Moisturizer", quantity: 1, price: 699 },
-        { name: "Gentle Foaming Cleanser", quantity: 1, price: 449 },
-      ],
-    },
-    {
-      id: "ORD-2024-002",
-      date: "Nov 28, 2024",
-      status: "Processing",
-      total: 1648,
-      items: [
-        { name: "Retinol Night Serum", quantity: 1, price: 1199 },
-        { name: "Daily Protection Sunscreen SPF 50", quantity: 1, price: 549 },
-      ],
-    },
-  ];
+
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -118,6 +104,16 @@ const Profile = () => {
                     {user.phone}
                   </div>
                 </div>
+              </div>
+
+              <div>
+                <button
+      onClick={handleLogit}
+      className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 border border-red-500 hover:bg-red-100 rounded-md transition"
+    >
+      <LogOut size={18} />
+      Logout
+    </button>
               </div>
             </div>
           </CardContent>
