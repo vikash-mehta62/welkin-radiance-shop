@@ -9,6 +9,7 @@ export interface ProductFormData {
   type: string;
   category: string[];
   mrp: number;
+  view?: number;
   sellingPrice: number;
   images: string[];
   keyBenefits: string;
@@ -85,74 +86,7 @@ export const useAdmin = () => {
   return context;
 };
 
-// Mock data
-const mockProducts: ProductFormData[] = [
-  {
-    id: '1',
-    title: 'Vitamin C Brightening Serum',
-    slug: 'vitamin-c-brightening-serum',
-    type: 'Serum',
-    category: ['Anti-Aging', 'Glow Boost'],
-    mrp: 1299,
-    sellingPrice: 999,
-    images: ['/placeholder.svg', '/placeholder.svg'],
-    keyBenefits: '• Brightens skin tone\n• Reduces dark spots\n• Provides antioxidant protection\n• Improves skin texture',
-    description: 'Our Vitamin C Brightening Serum is formulated with 20% Vitamin C to deliver powerful antioxidant benefits. This lightweight serum penetrates deep into the skin to brighten complexion, reduce the appearance of dark spots, and protect against environmental damage.',
-    skinSuitability: 'All skin types, especially dull and uneven skin',
-    ingredients: ['20% Vitamin C (L-Ascorbic Acid)', 'Hyaluronic Acid', 'Vitamin E', 'Ferulic Acid', 'Distilled Water'],
-    howToUse: 'Apply 2-3 drops to clean, dry skin in the morning. Gently pat until absorbed. Follow with moisturizer and sunscreen.',
-    extraInfoBlocks: [
-      {
-        id: 'block1',
-        image: '/placeholder.svg',
-        title: 'Clinical Results',
-        content: 'In clinical studies, 95% of users saw visible improvement in skin brightness within 4 weeks of regular use.'
-      }
-    ],
-    faqs: [
-      {
-        id: 'faq1',
-        question: 'Can I use this serum with other skincare products?',
-        answer: 'Yes, this serum works well with most skincare products. Apply it before moisturizer and always use sunscreen during the day.'
-      },
-      {
-        id: 'faq2',
-        question: 'How long does one bottle last?',
-        answer: 'With regular use (once daily), one 30ml bottle typically lasts 2-3 months.'
-      }
-    ]
-  },
-  {
-    id: '2',
-    title: 'Niacinamide Pore Refining Serum',
-    slug: 'niacinamide-pore-refining-serum',
-    type: 'Serum',
-    category: ['Acne Care', 'Oily Skin'],
-    mrp: 899,
-    sellingPrice: 699,
-    images: ['/placeholder.svg', '/placeholder.svg'],
-    keyBenefits: '• Minimizes pore appearance\n• Controls oil production\n• Reduces blemishes\n• Improves skin texture',
-    description: 'This 10% Niacinamide serum helps control excess oil production while minimizing the appearance of pores. Perfect for oily and acne-prone skin types.',
-    skinSuitability: 'Oily, combination, and acne-prone skin',
-    ingredients: ['10% Niacinamide', 'Zinc PCA', 'Hyaluronic Acid', 'Panthenol (Pro-Vitamin B5)'],
-    howToUse: 'Apply 2-3 drops to clean skin twice daily. Can be used morning and evening.',
-    extraInfoBlocks: [
-      {
-        id: 'block1',
-        image: '/placeholder.svg',
-        title: 'Oil Control Technology',
-        content: 'Our advanced formula helps regulate sebum production for a balanced, shine-free complexion.'
-      }
-    ],
-    faqs: [
-      {
-        id: 'faq1',
-        question: 'Is this suitable for sensitive skin?',
-        answer: 'While generally well-tolerated, we recommend patch testing first if you have sensitive skin.'
-      }
-    ]
-  }
-];
+
 
 const mockOrders: Order[] = [
   {
@@ -260,9 +194,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const fetchProducts = async () => {
       try {
         const response = await getAllProductAPI(); // this should return raw products array
-
+console.log(response)
         const transformed = response.map((item) => ({
           id: item._id,
+          _id: item._id,
+          view: item.productView ,
           title: item.title,
           slug: item.slug,
           type: item.type,

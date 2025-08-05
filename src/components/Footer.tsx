@@ -35,7 +35,7 @@ const Footer = () => {
       name: "Derma Gold Intense Glow Cream ",
       href: "/products/derma-gold-intense-glow-cream-30-gm",
     },
-    { name: "Derma White ", href: "/products/derma-white-50-gm" },
+    { name: "Derma White ", href: "/products/derma-white-lotion-50-gm" },
     { name: "Tablet UV Shield ", href: "/products/tablet-uv-shield-1x10-tablets" },
     { name: "G4 Max Glow ", href: "/products/g4-max-glow-1x10-capsules" },
     { name: "Porcelain Beauty Kit ", href: "/products/porcelain-beauty-kit" },

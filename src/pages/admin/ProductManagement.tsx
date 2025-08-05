@@ -89,6 +89,13 @@ const ProductManagement = () => {
                 <Badge variant="outline">{product.type}</Badge>
               </div>
 
+              {/* 👇 ADD THIS BELOW PRICE BLOCK */}
+              <div className="flex items-center text-sm text-muted-foreground mb-2">
+                <Eye className="h-4 w-4 mr-1" />
+                {product.view || 0} views
+              </div>
+
+
               <div className="flex items-center gap-2">
                 <Link
                   to={`/admin/products/${product.id}/edit`}

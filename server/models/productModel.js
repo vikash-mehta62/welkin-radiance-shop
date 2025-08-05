@@ -38,6 +38,7 @@ const ProductSchema = new mongoose.Schema(
     type: { type: String, required: true },
     category: [{ type: String }],
     mrp: { type: Number, required: true },
+    productView: { type: Number, default:0},
     sellingPrice: { type: Number, required: true },
     images: [{ type: String, required: true }],
     keyBenefits: { type: String,  },

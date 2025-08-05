@@ -14,6 +14,7 @@ const { CREATE_PRODUCT,
     GET_ALL_PRODUCT_SUMMARY,
     TRASH_PRODUCT,
     REFRESH_PRODUCT,
+    PRODUCT_VIEW_INCREAMENT,
     QUANITY_ADD_PRODUCT
 } = product
 
@@ -240,6 +241,28 @@ export const deleteProductAPI = async (id,) => {
 
 };
 
+
+export const viewProductAPI = async (slugOrId) => {
+//   const toastId = toast.loading("Fetching product...");
+
+  try {
+    const response = await apiConnector("GET", `${PRODUCT_VIEW_INCREAMENT}/${slugOrId}`);
+
+    if (!response?.data?.success) {
+      throw new Error(response?.data?.message || "Something went wrong!");
+    }
+
+    // toast.success("Product loaded successfully!");
+    // toast.dismiss(toastId);
+
+    return response?.data?.product;
+  } catch (error) {
+    console.error("VIEW product API ERROR:", error);
+    toast.dismiss(toastId);
+    toast.error(error?.response?.data?.message || "Failed to fetch product!");
+    return null;
+  }
+};
 
 export const updateProductAPI = async (id, formData, token) => {
 

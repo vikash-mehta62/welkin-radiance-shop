@@ -11,12 +11,12 @@ import {
   Flag,
   FlaskConical,
 } from "lucide-react";
-import heroImage from "/2.jpg";
+import heroImage from "/main.jpg";
 import productsGrid from "@/assets/products-grid.jpg";
 
 export const slugOrder = [
   "derma-gold-intense-glow-cream-30-gm",
-  "derma-white-50-gm",
+  "derma-white-lotion-50-gm",
   "tablet-uv-shield-1x10-tablets",
   "g4-max-glow-1x10-capsules",
   "porcelain-beauty-kit",

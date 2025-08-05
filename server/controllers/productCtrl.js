@@ -1,5 +1,6 @@
 const Product = require("../models/productModel"); // adjust path as needed
 const { z } = require("zod");
+const mongoose = require("mongoose");
 
 // ✅ Zod validation schema
 const productSchema = z.object({
@@ -201,7 +202,7 @@ const getAllProducts = async (req, res) => {
     // 📦 Fetch products
     const [products, total] = await Promise.all([
       Product.find(query)
-        .sort({ createdAt: -1 }) // optional: newest first
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit)),
       Product.countDocuments(query),
@@ -253,11 +254,39 @@ const deleteProductCtrl = async (req, res) => {
   }
 };
 
+const incrementProductView = async (req, res) => {
+  try {
+    const { slugOrId } = req.params;
+
+    const isObjectId = mongoose.Types.ObjectId.isValid(slugOrId);
+
+    const product = await Product.findOne({
+      $or: [
+        { slug: slugOrId },
+        ...(isObjectId ? [{ _id: slugOrId }] : []),
+      ],
+    });
+
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found" });
+    }
+
+    product.productView += 1;
+    console.log(product)
+    await product.save();
+
+    return res.status(200).json({ success: true, product });
+  } catch (error) {
+    console.error("Error incrementing product view:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 
 module.exports = {
 
   createProduct,
   updateProduct,
   getAllProducts,
-  deleteProductCtrl
+  deleteProductCtrl,
+incrementProductView
 }

@@ -22,7 +22,7 @@ const categories = [
   },
   {
     name: "Derma White",
-    href: "/products/derma-white-50-gm",
+    href: "/products/derma-white-lotion-50-gm",
   },
   {
     name: "Tablet UV Shield",
