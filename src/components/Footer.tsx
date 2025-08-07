@@ -64,21 +64,8 @@ const Footer = () => {
               Your daily ritual of radiance. Premium skincare products crafted
               with scientifically-proven ingredients for healthy, glowing skin.
             </p>
-            <div className="flex space-x-3">
-              {socialLinks.map((social) => (
-                <Button
-                  key={social.label}
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="hover:bg-sage hover:text-sage-dark"
-                >
-                  <a href={social.href} aria-label={social.label}>
-                    <social.icon className="h-5 w-5" />
-                  </a>
-                </Button>
-              ))}
-            </div>
+           
+           
           </div>
 
           {/* Quick Links */}
