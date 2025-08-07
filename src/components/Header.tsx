@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, User, Menu, X, ChevronDown } from "lucide-react";
+import { ShoppingCart, User, Menu, X, ChevronDown, LogOut } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAdmin } from "@/contexts/AdminContext";
 import { RootState } from "@/redux/store";
@@ -14,6 +14,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
+import { logout } from "@/services2/operations/auth";
 
 const categories = [
   {
@@ -52,7 +53,11 @@ const Header = () => {
   const { items } = useCart();
   const { products } = useAdmin(); // This might not be needed for just categories
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
+  const handleLogit = async () => {
+    await dispatch(logout(navigate));
+  };
   // Get user from Redux store
   const { user } = useSelector((state: RootState) => state.auth);
 
@@ -178,14 +183,23 @@ const Header = () => {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
-              <>
+              <div className="flex gap-2">
+                <div>
+                  <button
+                    onClick={handleLogit}
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 border border-red-500 hover:bg-red-100 rounded-md transition"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
+                </div>
                 <Link to="/profile">
                   <Button variant="ghost" size="sm">
                     <User className="h-4 w-4 mr-2" />
-                    {user.name || "Profile"}
+                    Profile
                   </Button>
                 </Link>
-              </>
+              </div>
             ) : (
               <>
                 <Link to="/login">
@@ -311,14 +325,23 @@ const Header = () => {
               {/* Mobile Auth Links */}
               <div className="pt-4 space-y-2">
                 {user ? (
-                  <Link
-                    to="/profile"
-                    className="block px-3 py-2 text-base font-medium text-foreground hover:text-primary hover:bg-accent rounded-md"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <User className="h-4 w-4 mr-2 inline" />
-                    {user.name || "Profile"}
-                  </Link>
+                  <div className="flex gap-2">
+                    <div>
+                      <button
+                        onClick={handleLogit}
+                        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 border border-red-500 hover:bg-red-100 rounded-md transition"
+                      >
+                        <LogOut size={18} />
+                        Logout
+                      </button>
+                    </div>
+                    <Link to="/profile">
+                      <Button variant="ghost" size="sm">
+                        <User className="h-4 w-4 mr-2" />
+                        Profile
+                      </Button>
+                    </Link>
+                  </div>
                 ) : (
                   <>
                     <Link
