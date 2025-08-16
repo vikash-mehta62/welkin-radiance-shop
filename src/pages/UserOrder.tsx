@@ -205,7 +205,7 @@ const UserOrder = () => {
                       <div>
                         <h3 className="font-semibold mb-3">Shipping Address</h3>
                         <div className="bg-sage-light/10 p-4 rounded-lg">
-                          <p>{order?.shippingInfo?.street}</p>
+                          <p>{order?.shippingInfo?.address}</p>
                           <p>
                             {order?.shippingInfo?.city},{" "}
                             {order?.shippingInfo?.state}{" "}

@@ -1,7 +1,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -33,6 +33,22 @@ export default function Checkout() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
+console.log(authData)
+ useEffect(() => {
+    if (authData?.user) {
+      const { name, email, phone } = authData.user
+
+      // अगर name में space है तो split करके first/last name बनाओ
+      if (name) {
+        const parts = name.split(" ")
+        setFirstName(parts[0] || "")
+        setLastName(parts.slice(1).join(" ") || "")
+      }
+
+      if (email) setEmail(email)
+      if (phone) setPhone(phone)
+    }
+  }, [authData])
 
   const [isProcessing, setIsProcessing] = useState(false)
 
