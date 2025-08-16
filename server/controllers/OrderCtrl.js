@@ -187,6 +187,7 @@ const orderId = await getNextOrderSequence(); // e.g., "00001"
       orderItems: products.map(item => ({
         product: item.id,
         quantity: item.quantity,
+        price: item.price,
       })),
       totalPrice: payable, // Update with actual total price
     });

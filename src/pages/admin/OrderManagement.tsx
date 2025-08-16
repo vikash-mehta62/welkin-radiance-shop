@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAdmin } from "@/contexts/AdminContext";
-import { Eye, Package, Calendar, User, MapPin } from "lucide-react";
+import { Eye, Package, Calendar, User, MapPin, IndianRupee, CreditCard, Phone, Mail } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -52,7 +52,7 @@ const OrderManagement = () => {
       : orders.filter((order) => order?.orderStatus === statusFilter);
 
 
-      console.log(filteredOrders)
+  console.log(filteredOrders)
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case "delivered":
@@ -210,82 +210,118 @@ const OrderManagement = () => {
                       View Details
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-2xl">
+                  <DialogContent className="max-w-3xl">
                     <DialogHeader>
-                      <DialogTitle>Order Details - #{order?.id}</DialogTitle>
+                      <DialogTitle className="text-xl font-bold">
+                        Order Details - #{order?.order_id}
+                      </DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-6">
+
+                    <div className="space-y-8 h-[90vh] overflow-scroll">
                       {/* Customer Information */}
                       <div>
-                        <h3 className="font-semibold mb-3">
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <Package className="h-4 w-4 text-primary" />
                           Customer Information
                         </h3>
-                        <div className="bg-sage-light/10 p-4 rounded-lg">
-                          <p>
-                            <strong>Name:</strong> {order?.user?.name}
+                        <div className="bg-muted/40 p-4 rounded-lg space-y-2">
+                          <p className="flex items-center gap-2">
+                            <Mail className="h-4 w-4 text-muted-foreground" />
+                            <span>{order?.user?.email}</span>
+                          </p>
+                          <p className="flex items-center gap-2">
+                            <Phone className="h-4 w-4 text-muted-foreground" />
+                            <span>{order?.user?.phone}</span>
                           </p>
                           <p>
-                            <strong>Email:</strong> {order?.user?.email}
+                            <strong>Order Date:</strong> {formatDate(order?.createdAt)}
                           </p>
                           <p>
-                            <strong>Order Date:</strong>{" "}
-                            {formatDate(order?.createdAt)}
+                            <strong>Status:</strong>{" "}
+                            <span className="capitalize">{order?.orderStatus}</span>
                           </p>
                         </div>
                       </div>
 
                       {/* Shipping Address */}
                       <div>
-                        <h3 className="font-semibold mb-3">Shipping Address</h3>
-                        <div className="bg-sage-light/10 p-4 rounded-lg">
-                          <p>{order?.shippingInfo?.street}</p>
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-primary" />
+                          Shipping Address
+                        </h3>
+                        <div className="bg-muted/40 p-4 rounded-lg space-y-1">
+                          <p>{order?.shippingInfo?.name}</p>
+                          <p>{order?.shippingInfo?.address}</p>
                           <p>
-                            {order?.shippingInfo?.city},{" "}
-                            {order?.shippingInfo?.state}{" "}
+                            {order?.shippingInfo?.city}, {order?.shippingInfo?.state} -{" "}
                             {order?.shippingInfo?.pincode}
                           </p>
+                        </div>
+                      </div>
+
+                      {/* Payment Information */}
+                      <div>
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <CreditCard className="h-4 w-4 text-primary" />
+                          Payment Information
+                        </h3>
+                        <div className="bg-muted/40 p-4 rounded-lg space-y-2">
                           <p>
-                            <strong>Phone:</strong> {order?.user?.phone}
+                            <strong>Payment ID:</strong>{" "}
+                            {order?.paymentInfo?.razorpayPaymentId}
+                          </p>
+                          <p>
+                            <strong>Order ID:</strong> {order?.paymentInfo?.razorpayOrderId}
+                          </p>
+                          <p>
+                            <strong>Paid At:</strong> {formatDate(order?.paidAt)}
                           </p>
                         </div>
                       </div>
 
                       {/* Order Items */}
                       <div>
-                        <h3 className="font-semibold mb-3">Order Items</h3>
+                        <h3 className="font-semibold mb-3 flex items-center gap-2">
+                          <Package className="h-4 w-4 text-primary" />
+                          Order Items
+                        </h3>
                         <div className="space-y-3">
-                          {order?.orderItems?.map((item, index) => (
+                          {order?.orderItems?.map((item: any, index: number) => (
                             <div
                               key={index}
-                              className="flex justify-between items-center p-3 bg-sage-light/10 rounded-lg"
+                              className="flex justify-between items-center p-3 bg-muted/40 rounded-lg"
                             >
                               <div>
-                                <p className="font-medium">
-                                  {item?.product?.title}
-                                </p>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="font-medium">{item?.product?.title}</p>
+                                <p className="text-sm text-muted-foreground flex flex-col">
                                   Quantity: {item?.quantity}
+                                <span>
+                                    Per Product: ₹{item?.price || item?.product?.sellingPrice} 
+                                </span>
                                 </p>
                               </div>
-                             <p className="font-semibold">
-  ₹
-  {(Number(item?.product?.sellingPrice) * Number(item?.quantity)).toLocaleString()}
-</p>
-
+                              <p className="font-semibold flex items-center gap-1">
+                                <IndianRupee className="h-4 w-4" />
+                                {(Number(item.price || item?.product?.sellingPrice) *
+                                  Number(item?.quantity)
+                                ).toLocaleString()}
+                              </p>
                             </div>
                           ))}
                         </div>
                         <Separator className="my-4" />
                         <div className="flex justify-between items-center text-lg font-bold">
                           <span>Total Amount:</span>
-                          <span className="text-primary">
-                            ₹{order?.totalPrice?.toLocaleString()}
+                          <span className="text-primary flex items-center gap-1">
+                            <IndianRupee className="h-5 w-5" />
+                            {Number(order?.totalPrice).toLocaleString()}
                           </span>
                         </div>
                       </div>
                     </div>
                   </DialogContent>
                 </Dialog>
+
               </div>
             </CardContent>
           </Card>

@@ -179,7 +179,7 @@ const UserOrder = () => {
                   </DialogTrigger>
                   <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                      <DialogTitle>Order Details - #{order?.id}</DialogTitle>
+                      <DialogTitle>Order Details - #{order?.order_id}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-6">
                       {/* Customer Information */}
@@ -230,14 +230,17 @@ const UserOrder = () => {
                                 <p className="font-medium">
                                   {item?.product?.title}
                                 </p>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-sm text-muted-foreground flex flex-col">
                                   Quantity: {item?.quantity}
+                                <span>
+                                    Per Product: ₹{item?.price || item?.product?.sellingPrice} 
+                                </span>
                                 </p>
                               </div>
                               <p className="font-semibold">
                                 ₹
                                 {(
-                                  item?.product?.sellingPrice * item?.quantity
+                                 item.price || item?.product?.sellingPrice * item?.quantity
                                 ).toLocaleString()}
                               </p>
                             </div>

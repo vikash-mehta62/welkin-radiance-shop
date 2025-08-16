@@ -148,9 +148,10 @@ export default function ProductPage() {
   }
 
   const handleAddToCart = () => {
+    console.log(product)
     for (let i = 0; i < quantity; i++) {
       addItem({
-        id: product.id,
+        id: product.id || product._id ,
         slug: product.slug,
         title: product.title,
         price: product.sellingPrice,
