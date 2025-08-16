@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllOrder } from "@/services2/operations/order";
 import { getAllDashboardDataAPI } from "@/services2/operations/dashboard";
+import { Link } from "react-router-dom";
 // Types based on your API response
 interface User {
   _id: string;
@@ -277,46 +278,53 @@ export default function AdminDashboard() {
                 Manage your store efficiently
               </p>
             </CardHeader>
-            <CardContent className="space-y-4 pt-0">
-              <Button
-                variant="outline"
-                className="w-full justify-start h-12 hover:bg-gray-50 transition-all bg-transparent"
-              >
-                <Package className="h-5 w-5 mr-3 text-emerald-600" />
-                <div className="text-left">
-                  <div className="font-medium">Add New Product</div>
-                  <div className="text-xs text-gray-500">
-                    Create skincare products
-                  </div>
-                </div>
-              </Button>
+        <CardContent className="space-y-4 pt-0">
+  <Link to="/admin/products">
+    <Button
+      variant="outline"
+      className="w-full justify-start h-12 hover:bg-gray-50 transition-all bg-transparent"
+    >
+      <Package className="h-5 w-5 mr-3 text-emerald-600" />
+      <div className="text-left">
+        <div className="font-medium">Add New Product</div>
+        <div className="text-xs text-gray-500">
+          Create skincare products
+        </div>
+      </div>
+    </Button>
+  </Link>
 
-              <Button
-                variant="outline"
-                className="w-full justify-start h-12 hover:bg-gray-50 transition-all bg-transparent"
-              >
-                <ShoppingCart className="h-5 w-5 mr-3 text-blue-600" />
-                <div className="text-left">
-                  <div className="font-medium">View Orders</div>
-                  <div className="text-xs text-gray-500">
-                    Manage customer orders
-                  </div>
-                </div>
-              </Button>
+  <Link to="/admin/orders">
+    <Button
+      variant="outline"
+      className="w-full justify-start h-12 hover:bg-gray-50 transition-all bg-transparent"
+    >
+      <ShoppingCart className="h-5 w-5 mr-3 text-blue-600" />
+      <div className="text-left">
+        <div className="font-medium">View Orders</div>
+        <div className="text-xs text-gray-500">
+          Manage customer orders
+        </div>
+      </div>
+    </Button>
+  </Link>
 
-              <Button
-                variant="outline"
-                className="w-full justify-start h-12 hover:bg-gray-50 transition-all bg-transparent"
-              >
-                <Users className="h-5 w-5 mr-3 text-purple-600" />
-                <div className="text-left">
-                  <div className="font-medium">Manage Users</div>
-                  <div className="text-xs text-gray-500">
-                    View customer accounts
-                  </div>
-                </div>
-              </Button>
-            </CardContent>
+  <Link to="/admin/users">
+    <Button
+      variant="outline"
+      className="w-full justify-start h-12 hover:bg-gray-50 transition-all bg-transparent"
+    >
+      <Users className="h-5 w-5 mr-3 text-purple-600" />
+      <div className="text-left">
+        <div className="font-medium">Manage Users</div>
+        <div className="text-xs text-gray-500">
+          View customer accounts
+        </div>
+      </div>
+    </Button>
+  </Link>
+</CardContent>
+
           </Card>
         </div>
       </div>

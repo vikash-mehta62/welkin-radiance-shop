@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {getAllProductAPI} from "@/services2/operations/product"
+import {getUsersWithOrdersAPI } from "@/services2/operations/auth"
 import { v4 as uuidv4 } from "uuid"; // for generating unique ids
 
 export interface ProductFormData {
@@ -163,11 +164,25 @@ const mockUsers: User[] = [
   }
 ];
 
+
+
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<ProductFormData[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [users, setUsers] = useState<User[]>([]);
 
+
+   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const usersData = await getUsersWithOrdersAPI();
+        setUsers(usersData);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
   useEffect(() => {
     // Load from localStorage or use mock data
     
@@ -185,7 +200,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (savedUsers) {
       setUsers(JSON.parse(savedUsers));
     } else {
-      setUsers(mockUsers);
+      // setUsers(mockUsers);
     }
   }, []);
 

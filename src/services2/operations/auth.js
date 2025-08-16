@@ -16,7 +16,8 @@ const {
   UPDATE_PASSWORD_API,
   USER_WITH_ORDER,
   DELETE_STORE_API,
-  VENDOR_WITH_ORDER
+  VENDOR_WITH_ORDER,
+  GET_USER_DETAILS_API
 } = endpoints;
 
 export async function login(email, password, navigate, dispatch) {
@@ -157,6 +158,35 @@ export async function createMemberAPI(formData) {
   // Swal.close();
 }
 
+export const getUsersWithOrdersAPI = async () => {
+  Swal.fire({
+    title: "Loading",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    const response = await apiConnector("GET", GET_USER_DETAILS_API);
+
+    Swal.close();
+
+    if (!response?.data?.status || response?.data?.status !== "success") {
+      throw new Error(response?.data?.message || "Something went wrong!");
+    }
+
+    return response?.data?.data || [];
+  } catch (error) {
+    console.error("USER_WITH_ORDER API ERROR:", error);
+    Swal.close();
+    toast.error(error?.response?.data?.message || "Failed to fetch users with orders!");
+    return [];
+  }
+};
 
 
 export const getAllMembersAPI = async () => {

@@ -457,6 +457,50 @@ console.log(storeId)
   }
 };
 
+const getUsersWithOrders = async (req, res) => {
+  try {
+    // 1. All users
+    const users = await authModel.find();
+
+    // 2. Prepare response
+    const userData = await Promise.all(
+      users.map(async (user) => {
+        // find all orders of this user
+        const orders = await Order.find({ user: user._id });
+
+        // count orders
+        const orderCount = orders.length;
+
+        // sum totalSpent
+        const totalSpent = orders.reduce(
+          (sum, order) => sum + Number(order.totalPrice || 0),
+          0
+        );
+
+        return {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          joinedAt: user.createdAt, // from timestamps
+          orderCount,
+          totalSpent,
+          status: "active", // fix as per requirement
+        };
+      })
+    );
+
+    res.status(200).json({
+      status: "success",
+      results: userData.length,
+      data: userData,
+    });
+  } catch (error) {
+    console.error("Error fetching users with orders:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
 
 module.exports = {
   registerCtrl,
@@ -469,5 +513,6 @@ module.exports = {
   getAllStoreCtrl,
   fetchMyProfile,
   changePasswordCtrl,
-  deleteStoreIfNoOrders
+  deleteStoreIfNoOrders,
+  getUsersWithOrders
 };

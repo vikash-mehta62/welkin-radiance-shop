@@ -142,8 +142,8 @@ const UserManagement = () => {
                   <TableHead>Joined</TableHead>
                   <TableHead>Orders</TableHead>
                   <TableHead>Total Spent</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+                  {/* <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -179,7 +179,7 @@ const UserManagement = () => {
                     <TableCell>
                       <span className="font-semibold text-primary">₹{user.totalSpent.toLocaleString()}</span>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Badge className={getStatusBadgeColor(user.status)}>
                         {user.status.toUpperCase()}
                       </Badge>
@@ -197,7 +197,7 @@ const UserManagement = () => {
                           <SelectItem value="inactive">Inactive</SelectItem>
                         </SelectContent>
                       </Select>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>
