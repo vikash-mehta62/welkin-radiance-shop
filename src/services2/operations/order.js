@@ -3,7 +3,7 @@ import { toast } from "react-toastify"
 import { apiConnector } from "../apiConnector"
 import { paymentEndpoints } from "../apis"
 import { order } from "../apis"
-import rzpLogo from "/logo.jpeg"
+import rzpLogo from "/logo2.jpg"
 
 const {
   PRODUCT_PAYMENT_API,
@@ -82,7 +82,7 @@ export async function BuyProduct(
       currency: orderResponse.data.data.currency,
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,
-      name: "NK Enterprises",
+      name: "Welkin Pharmaceuticals",
       description: "Thank you for Purchasing the Products.",
       image: rzpLogo,
       // prefill: {
