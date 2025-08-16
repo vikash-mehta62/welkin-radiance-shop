@@ -181,7 +181,7 @@ const UserOrder = () => {
                     <DialogHeader>
                       <DialogTitle>Order Details - #{order?.order_id}</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-6">
+                    <div className="space-y-6 h-[90vh] overflow-scroll">
                       {/* Customer Information */}
                       <div>
                         <h3 className="font-semibold mb-3">
