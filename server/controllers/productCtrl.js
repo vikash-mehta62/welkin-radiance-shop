@@ -162,8 +162,8 @@ const getAllProducts = async (req, res) => {
       category,
       minPrice,
       maxPrice,
-      page = 1,
-      limit = 10,
+      page,
+      limit,
     } = req.query;
 
     const query = {};
@@ -196,15 +196,17 @@ const getAllProducts = async (req, res) => {
       if (maxPrice) query.sellingPrice.$lte = Number(maxPrice);
     }
 
-    // 🧮 Pagination
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const pageNum = parseInt(page) || 1;
+    const limitNum = limit !== undefined ? parseInt(limit) : 0;
+    const skip = limitNum > 0 ? (pageNum - 1) * limitNum : 0;
+
+    let findQuery = Product.find(query).sort({ createdAt: -1 });
+    if (skip > 0) findQuery = findQuery.skip(skip);
+    if (limitNum > 0) findQuery = findQuery.limit(limitNum);
 
     // 📦 Fetch products
     const [products, total] = await Promise.all([
-      Product.find(query)
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(parseInt(limit)),
+      findQuery,
       Product.countDocuments(query),
     ]);
 
@@ -212,8 +214,8 @@ const getAllProducts = async (req, res) => {
       success: true,
       data: products,
       total,
-      currentPage: parseInt(page),
-      totalPages: Math.ceil(total / limit),
+      currentPage: pageNum,
+      totalPages: limitNum > 0 ? Math.ceil(total / limitNum) : 1,
     });
   } catch (error) {
     console.error("Error fetching products:", error);

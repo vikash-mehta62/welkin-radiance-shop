@@ -9,11 +9,12 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
-
+import { useAdmin } from "@/contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { products } = useAdmin();
 
   const socialLinks = [
     { icon: Facebook, href: "#", label: "Facebook" },
@@ -30,18 +31,18 @@ const Footer = () => {
     { name: "Admin", href: "/admin" },
   ];
 
-  const categories = [
-    {
-      name: "Derma Gold Intense Glow Cream ",
-      href: "/products/derma-gold-intense-glow-cream-30-gm",
-    },
-    { name: "Derma White ", href: "/products/derma-white-lotion-50-gm" },
-    { name: "Tablet UV Shield ", href: "/products/tablet-uv-shield-1x10-tablets" },
-    { name: "G4 Max Glow ", href: "/products/g4-max-glow-1x10-capsules" },
-    { name: "Porcelain Beauty Kit ", href: "/products/porcelain-beauty-kit" },
-    { name: "Korean Glass Kit ", href: "/products/korean-glass-beauty-kit" },
-
-  ];
+  const categories = products && products.length > 0
+    ? products.slice(0, 6).map(p => ({
+        name: p.title,
+        href: `/products/${p.slug}`,
+      }))
+    : [
+        {
+          name: "Derma Gold Intense Glow Cream ",
+          href: "/products/derma-gold-intense-glow-cream-30-gm",
+        },
+        { name: "Derma White ", href: "/products/derma-white-lotion-50-gm" },
+      ];
 
   return (
     <footer className="bg-sage-dark text-background">

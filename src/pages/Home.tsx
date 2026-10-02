@@ -28,12 +28,15 @@ const Home = () => {
 
   // Get first 4 products from AdminContext
 
-  // Sort products based on the above slug order
-  const sortedProducts = slugOrder
+  // Sort products prioritizing matched slugs, then filling with all other available products
+  const matchedProducts = slugOrder
     .map((slug) => products.find((p) => p.slug === slug))
-    .filter(Boolean); // Removes any `undefined` if slug doesn't match
+    .filter(Boolean);
 
-  const featuredProducts = sortedProducts.slice(0, 4).map((product) => ({
+  const otherProducts = products.filter((p) => !slugOrder.includes(p.slug));
+  const sortedProducts = [...matchedProducts, ...otherProducts];
+
+  const featuredProducts = sortedProducts.slice(0, 8).map((product) => ({
     id: product.id!,
     slug: product.slug,
     title: product.title,

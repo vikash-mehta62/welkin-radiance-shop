@@ -66,7 +66,12 @@ const Header = () => {
     0
   );
 
-  const allCategories = categories; // Using the provided categories array directly
+  const allCategories = products && products.length > 0
+    ? products.map(p => ({
+        name: p.title,
+        href: `/products/${p.slug}`,
+      }))
+    : categories;
 
   const handleCategoryClick = (categoryId: string) => {
     navigate(`/products?category=${categoryId}`);
