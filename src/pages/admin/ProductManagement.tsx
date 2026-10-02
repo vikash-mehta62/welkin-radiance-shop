@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { useAdmin } from "@/contexts/AdminContext";
-import { Plus, Edit, Trash2, Eye, Package } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Plus, Edit, Trash2, Eye, Package, ArrowUpDown, Check, Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,17 +21,52 @@ import {
 import {
   deleteProductAPI,
   getAllProductAPI,
+  updateProductAPI,
 } from "@/services2/operations/product";
+
 const ProductManagement = () => {
-  const { products, deleteProduct } = useAdmin();
+  const { products, deleteProduct, updateProduct, refreshProducts } = useAdmin();
+  const { toast } = useToast();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [seqInputs, setSeqInputs] = useState<{ [id: string]: number }>({});
+  const [savingSeqId, setSavingSeqId] = useState<string | null>(null);
 
   const fetchProduct = async () => {
-    await getAllProductAPI();
+    if (refreshProducts) {
+      await refreshProducts();
+    } else {
+      await getAllProductAPI();
+    }
   };
-  const handleDelete = (id: string) => {
-    deleteProductAPI(id);
-    fetchProduct();
+
+  const handleDelete = async (id: string) => {
+    await deleteProductAPI(id);
+    deleteProduct(id);
+    await fetchProduct();
+  };
+
+  const handleSaveSequence = async (id: string, currentSeq: number) => {
+    const val = seqInputs[id] !== undefined ? seqInputs[id] : currentSeq;
+    setSavingSeqId(id);
+    try {
+      await updateProductAPI(id, { sequence: val });
+      updateProduct(id, { sequence: val });
+      if (refreshProducts) {
+        await refreshProducts();
+      }
+      toast({
+        title: "Sequence Updated!",
+        description: `Product sequence set to ${val}. List re-ordered automatically.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update sequence.",
+        variant: "destructive",
+      });
+    } finally {
+      setSavingSeqId(null);
+    }
   };
 
   return (
@@ -47,6 +84,19 @@ const ProductManagement = () => {
             Add Product
           </Button>
         </Link>
+      </div>
+
+      {/* Sequence Guide Banner */}
+      <div className="flex items-start sm:items-center justify-between p-3.5 bg-primary/5 border border-primary/20 rounded-xl text-xs text-foreground">
+        <div className="flex items-center gap-2">
+          <ArrowUpDown className="h-4 w-4 text-primary shrink-0" />
+          <span>
+            <strong>Sequence Quick Edit:</strong> Card ke andar sequence number daal kar <strong>Save</strong> karein. List turant nayi sequence ke according set ho jayegi!
+            <span className="block sm:inline sm:ml-2 text-muted-foreground font-normal">
+              (1, 2, 3... = Sabse Pehle | 0 = Normal / Middle | -2 = Last se Dusra | -1 = Sabse Last)
+            </span>
+          </span>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -75,7 +125,7 @@ const ProductManagement = () => {
               </div>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <div>
                   <span className="text-lg font-bold text-primary">
                     ₹{product.sellingPrice}
@@ -86,11 +136,60 @@ const ProductManagement = () => {
                     </span>
                   )}
                 </div>
-                <Badge variant="outline">{product.type}</Badge>
+                <div className="flex items-center gap-1.5">
+                  <Badge variant="secondary" className="text-xs bg-primary/10 text-primary border border-primary/20">
+                    Seq: {product.sequence ?? 0}
+                  </Badge>
+                  <Badge variant="outline">{product.type}</Badge>
+                </div>
               </div>
 
-              {/* 👇 ADD THIS BELOW PRICE BLOCK */}
-              <div className="flex items-center text-sm text-muted-foreground mb-2">
+              {/* 👇 Sequence Inline Edit Box */}
+              <div className="flex items-center justify-between p-2 mb-3 bg-muted/40 rounded-lg border border-border/60">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-foreground">Seq:</span>
+                  <Input
+                    type="number"
+                    value={
+                      seqInputs[product.id!] !== undefined
+                        ? seqInputs[product.id!]
+                        : (product.sequence ?? 0)
+                    }
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      setSeqInputs((prev) => ({ ...prev, [product.id!]: val }));
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSaveSequence(product.id!, product.sequence ?? 0);
+                      }
+                    }}
+                    className="h-7 w-20 text-xs text-center font-bold px-1"
+                    placeholder="0"
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  className="h-7 text-xs px-2.5 bg-primary hover:bg-primary/90 text-primary-foreground gap-1"
+                  disabled={savingSeqId === product.id}
+                  onClick={() => handleSaveSequence(product.id!, product.sequence ?? 0)}
+                >
+                  {savingSeqId === product.id ? (
+                    <>
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Saving
+                    </>
+                  ) : (
+                    <>
+                      <Check className="h-3 w-3" />
+                      Save
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              {/* Views info */}
+              <div className="flex items-center text-sm text-muted-foreground mb-3">
                 <Eye className="h-4 w-4 mr-1" />
                 {product.view || 0} views
               </div>

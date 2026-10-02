@@ -7,12 +7,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import ProductCard from "@/components/ProductCard";
 import { useAdmin } from "@/contexts/AdminContext";
 import { Filter, Grid, List } from "lucide-react";
+import { getSequenceRank } from "@/lib/utils";
 
 const Products = () => {
   const { products } = useAdmin();
   const [searchParams, setSearchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [sortBy, setSortBy] = useState('newest');
+  const [sortBy, setSortBy] = useState('sequence');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Get unique categories from products
@@ -52,8 +53,11 @@ const Products = () => {
         return b.sellingPrice - a.sellingPrice;
       case 'name':
         return a.title.localeCompare(b.title);
-      default:
+      case 'newest':
         return 0;
+      case 'sequence':
+      default:
+        return getSequenceRank(a.sequence) - getSequenceRank(b.sequence);
     }
   });
 
@@ -114,6 +118,7 @@ const Products = () => {
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="sequence">Default (Sequence)</SelectItem>
                     <SelectItem value="newest">Newest First</SelectItem>
                     <SelectItem value="price-low">Price: Low to High</SelectItem>
                     <SelectItem value="price-high">Price: High to Low</SelectItem>

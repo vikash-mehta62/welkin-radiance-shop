@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import { ShoppingCart, User, Menu, X, ChevronDown, LogOut } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAdmin } from "@/contexts/AdminContext";
 import { RootState } from "@/redux/store";
+import { sortProductsBySequence } from "@/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -66,8 +67,10 @@ const Header = () => {
     0
   );
 
-  const allCategories = products && products.length > 0
-    ? products.map(p => ({
+  const sortedProducts = useMemo(() => sortProductsBySequence(products || []), [products]);
+
+  const allCategories = sortedProducts.length > 0
+    ? sortedProducts.map(p => ({
         name: p.title,
         href: `/products/${p.slug}`,
       }))

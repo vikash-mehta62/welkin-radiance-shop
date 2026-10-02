@@ -52,9 +52,43 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
 
   <!-- Manifest -->
-  <link rel="manifest" href="/manifest.json" />
+  <link rel="manifest" href="/site.webmanifest" />
   <meta name="theme-color" content="#ffffff" />
-  <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
+
+  <!-- Structured Data / JSON-LD for Google, Bing & AI Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://www.welkinonline.in/#organization",
+        "name": "Welkin Pharmaceuticals",
+        "url": "https://www.welkinonline.in",
+        "logo": "https://www.welkinonline.in/logo2.jpg",
+        "description": "Dermatology-led skincare and wellness brand formulating science-backed solutions for Indian skin.",
+        "sameAs": [
+          "https://www.instagram.com",
+          "https://www.facebook.com"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.welkinonline.in/#website",
+        "url": "https://www.welkinonline.in",
+        "name": "Welkin Pharmaceuticals",
+        "publisher": {
+          "@id": "https://www.welkinonline.in/#organization"
+        },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.welkinonline.in/products?search={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>

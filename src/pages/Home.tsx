@@ -14,27 +14,13 @@ import {
 import heroImage from "/main.jpg";
 import productsGrid from "@/assets/products-grid.jpg";
 
-export const slugOrder = [
-  "derma-gold-intense-glow-cream-30-gm",
-  "derma-white-lotion-50-gm",
-  "tablet-uv-shield-1x10-tablets",
-  "g4-max-glow-1x10-capsules",
-  "porcelain-beauty-kit",
-  "korean-glass-beauty-kit",
-  "retinol-serum",
-];
+import { sortProductsBySequence } from "@/lib/utils";
+
 const Home = () => {
   const { products } = useAdmin();
 
-  // Get first 4 products from AdminContext
-
-  // Sort products prioritizing matched slugs, then filling with all other available products
-  const matchedProducts = slugOrder
-    .map((slug) => products.find((p) => p.slug === slug))
-    .filter(Boolean);
-
-  const otherProducts = products.filter((p) => !slugOrder.includes(p.slug));
-  const sortedProducts = [...matchedProducts, ...otherProducts];
+  // Sort products strictly by sequence (1, 2, 3... first, 0 normal, -2, -1 last)
+  const sortedProducts = sortProductsBySequence(products || []);
 
   const featuredProducts = sortedProducts.slice(0, 8).map((product) => ({
     id: product.id!,

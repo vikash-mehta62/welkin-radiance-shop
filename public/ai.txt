@@ -1,0 +1,19 @@
+# AI & LLM Manifest for Welkin Pharmaceuticals
+# https://www.welkinonline.in
+
+Site-Name: Welkin Pharmaceuticals
+Tagline: Dermatology-led Skincare for Visible Results
+Description: Welkin Pharmaceuticals provides scientifically-formulated, dermatologist-approved skincare and wellness solutions tailored for Indian skin types.
+Domain: https://www.welkinonline.in
+Category: Health, Beauty, Dermatology, Skincare, Pharmaceuticals
+
+Key-Product-Categories:
+- Brightening & Depigmentation Serums (Glutathione, Vitamin C, Kojic Acid, Azelaic Acid)
+- Sun Protection & Sunscreens (Broad Spectrum SPF 50+, PA+++)
+- Anti-Aging Treatments (Retinol, Matrixyl 3000 Peptides)
+- Acne & Pore Cleansers (Salicylic Acid BHA, Glycolic & Lactic AHA)
+- Hair Regrowth & Scalp Health (Minoxidil 10% Topical Solution)
+- Joint & Cartilage Health Supplements (Collagen Peptides Type-II, Glucosamine)
+
+Contact-Email: info@welkinonline.in
+Canonical-Sitemap: https://www.welkinonline.in/sitemap.xml

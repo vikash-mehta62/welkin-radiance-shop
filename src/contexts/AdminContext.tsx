@@ -2,12 +2,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import {getAllProductAPI} from "@/services2/operations/product"
 import {getUsersWithOrdersAPI } from "@/services2/operations/auth"
 import { v4 as uuidv4 } from "uuid"; // for generating unique ids
+import { sortProductsBySequence } from "@/lib/utils";
 
 export interface ProductFormData {
   id?: string;
   title: string;
   slug: string;
   type: string;
+  sequence?: number;
   category: string[];
   mrp: number;
   view?: number;
@@ -75,6 +77,7 @@ interface AdminContextType {
   deleteProduct: (id: string) => void;
   updateOrderStatus: (orderId: string, status: Order['status']) => void;
   updateUserStatus: (userId: string, status: User['status']) => void;
+  refreshProducts?: () => Promise<void>;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
@@ -214,6 +217,7 @@ console.log(response)
           id: item._id,
           _id: item._id,
           view: item.productView ,
+          sequence: typeof item.sequence === 'number' ? item.sequence : 0,
           title: item.title,
           slug: item.slug,
           type: item.type,
@@ -240,7 +244,7 @@ console.log(response)
           })) ?? [],
         }));
 
-        setProducts(transformed);
+        setProducts(sortProductsBySequence(transformed));
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -255,11 +259,11 @@ console.log(response)
       ...product,
       id: Date.now().toString()
     };
-    setProducts(prev => [...prev, newProduct]);
+    setProducts(prev => sortProductsBySequence([...prev, newProduct]));
   };
 
   const updateProduct = (id: string, productData: Partial<ProductFormData>) => {
-    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...productData } : p));
+    setProducts(prev => sortProductsBySequence(prev.map(p => p.id === id ? { ...p, ...productData } : p)));
   };
 
   const deleteProduct = (id: string) => {
@@ -282,7 +286,8 @@ console.log(response)
     updateProduct,
     deleteProduct,
     updateOrderStatus,
-    updateUserStatus
+    updateUserStatus,
+    refreshProducts: fetchProducts
   };
 
   return (

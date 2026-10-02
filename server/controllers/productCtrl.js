@@ -200,13 +200,39 @@ const getAllProducts = async (req, res) => {
     const limitNum = limit !== undefined ? parseInt(limit) : 0;
     const skip = limitNum > 0 ? (pageNum - 1) * limitNum : 0;
 
-    let findQuery = Product.find(query).sort({ createdAt: -1 });
-    if (skip > 0) findQuery = findQuery.skip(skip);
-    if (limitNum > 0) findQuery = findQuery.limit(limitNum);
+    const pipeline = [];
+    if (Object.keys(query).length > 0) {
+      pipeline.push({ $match: query });
+    }
+
+    pipeline.push({
+      $addFields: {
+        sortRank: {
+          $cond: [
+            { $gt: [{ $ifNull: ["$sequence", 0] }, 0] },
+            "$sequence",
+            {
+              $cond: [
+                { $lt: [{ $ifNull: ["$sequence", 0] }, 0] },
+                { $add: [2000000, "$sequence"] },
+                1000000
+              ]
+            }
+          ]
+        }
+      }
+    });
+
+    pipeline.push({
+      $sort: { sortRank: 1, createdAt: -1 }
+    });
+
+    if (skip > 0) pipeline.push({ $skip: skip });
+    if (limitNum > 0) pipeline.push({ $limit: limitNum });
 
     // 📦 Fetch products
     const [products, total] = await Promise.all([
-      findQuery,
+      Product.aggregate(pipeline),
       Product.countDocuments(query),
     ]);
 

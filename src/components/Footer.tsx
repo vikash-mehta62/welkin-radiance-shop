@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 import { FaWhatsapp } from "react-icons/fa"; // Import WhatsApp icon
+import { sortProductsBySequence } from "@/lib/utils";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -31,8 +32,10 @@ const Footer = () => {
     { name: "Admin", href: "/admin" },
   ];
 
-  const categories = products && products.length > 0
-    ? products.slice(0, 6).map(p => ({
+  const sortedProducts = sortProductsBySequence(products || []);
+
+  const categories = sortedProducts.length > 0
+    ? sortedProducts.slice(0, 6).map(p => ({
         name: p.title,
         href: `/products/${p.slug}`,
       }))

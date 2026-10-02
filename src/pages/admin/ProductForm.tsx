@@ -95,6 +95,7 @@ const ProductForm = () => {
     title: '',
     slug: '',
     type: '',
+    sequence: 0,
     category: [],
     mrp: 0,
     sellingPrice: 0,
@@ -209,7 +210,10 @@ const ProductForm = () => {
       const product = products.find(p => p.id === id);
       if (product) {
         const { id: productId, ...productData } = product;
-        setFormData(productData);
+        setFormData({
+          ...productData,
+          sequence: typeof product.sequence === 'number' ? product.sequence : 0
+        });
       }
     }
   }, [isEdit, id, products]);
@@ -413,7 +417,7 @@ console.log(formData)
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <Label htmlFor="type">Product Type*</Label>
@@ -471,6 +475,21 @@ console.log(formData)
                   </SelectContent>
                 </Select>
               </div>
+
+              <div>
+                <Label htmlFor="sequence">Sequence / Order</Label>
+                <Input
+                  id="sequence"
+                  type="number"
+                  value={formData.sequence ?? 0}
+                  onChange={(e) => setFormData(prev => ({ ...prev, sequence: Number(e.target.value) }))}
+                  placeholder="0 (e.g. 1, 2 or -1, -2)"
+                />
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  1, 2 = Pehle | 0 = Normal | -1 = Last, -2 = 2nd Last
+                </p>
+              </div>
+
               <div>
                 <Label htmlFor="mrp">MRP (₹)*</Label>
                 <Input
@@ -481,6 +500,7 @@ console.log(formData)
                   required
                 />
               </div>
+
               <div>
                 <Label htmlFor="sellingPrice">Selling Price (₹)*</Label>
                 <Input
