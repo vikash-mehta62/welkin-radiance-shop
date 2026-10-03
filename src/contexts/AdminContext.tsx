@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {getAllProductAPI} from "@/services2/operations/product"
 import {getUsersWithOrdersAPI } from "@/services2/operations/auth"
 import { v4 as uuidv4 } from "uuid"; // for generating unique ids
@@ -208,50 +208,50 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, []);
 
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await getAllProductAPI(); // this should return raw products array
-console.log(response)
-        const transformed = response.map((item) => ({
-          id: item._id,
-          _id: item._id,
-          view: item.productView ,
-          sequence: typeof item.sequence === 'number' ? item.sequence : 0,
-          title: item.title,
-          slug: item.slug,
-          type: item.type,
-          category: item.category,
-          mrp: item.mrp,
-          sellingPrice: item.sellingPrice,
-          images: item.images,
-          keyBenefits: item.keyBenefits,
-          description: item.description,
-          skinSuitability: item.skinSuitability,
-          ingredients: item.ingredients,
-          howToUse: item.howToUse,
-          precataions: item.precataions,
-          extraInfoBlocks: item.extraInfoBlocks?.map((block) => ({
-            id: block?._id ||uuidv4(),
-            image: block.image,
-            title: block.title,
-            content: block.content,
-          })) ?? [],
-          faqs: item.faqs?.map((faq) => ({
-            id: faq?._id || uuidv4(),
-            question: faq.question,
-            answer: faq.answer,
-          })) ?? [],
-        }));
+  const fetchProducts = useCallback(async () => {
+    try {
+      const response = await getAllProductAPI(); // this should return raw products array
+      console.log(response);
+      const transformed = response.map((item) => ({
+        id: item._id,
+        _id: item._id,
+        view: item.productView ,
+        sequence: typeof item.sequence === 'number' ? item.sequence : 0,
+        title: item.title,
+        slug: item.slug,
+        type: item.type,
+        category: item.category,
+        mrp: item.mrp,
+        sellingPrice: item.sellingPrice,
+        images: item.images,
+        keyBenefits: item.keyBenefits,
+        description: item.description,
+        skinSuitability: item.skinSuitability,
+        ingredients: item.ingredients,
+        howToUse: item.howToUse,
+        precataions: item.precataions,
+        extraInfoBlocks: item.extraInfoBlocks?.map((block) => ({
+          id: block?._id ||uuidv4(),
+          image: block.image,
+          title: block.title,
+          content: block.content,
+        })) ?? [],
+        faqs: item.faqs?.map((faq) => ({
+          id: faq?._id || uuidv4(),
+          question: faq.question,
+          answer: faq.answer,
+        })) ?? [],
+      }));
 
-        setProducts(sortProductsBySequence(transformed));
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
+      setProducts(sortProductsBySequence(transformed));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
 
   const addProduct = (product: Omit<ProductFormData, 'id'>) => {
